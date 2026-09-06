@@ -4,8 +4,6 @@
 
 ### Noi dung dich
 
-Dan noi dung da dich vao day.
-
 ### Hinh anh
 
 ```md
@@ -13,5 +11,3 @@ Dan noi dung da dich vao day.
 ```
 
 ## Ghi chu rieng
-
-- 

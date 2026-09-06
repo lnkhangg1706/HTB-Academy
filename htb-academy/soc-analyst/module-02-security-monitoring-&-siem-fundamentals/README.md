@@ -13,5 +13,3 @@ Dan noi dung da dich vao day.
 ```
 
 ## Ghi chu rieng
-
-- 
