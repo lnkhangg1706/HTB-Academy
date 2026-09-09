@@ -39,7 +39,7 @@ Không có một định nghĩa duy nhất về sự cố an ninh CNTT, vì vậ
 
 Xử lý sự cố là một tập hợp các quy trình được xác định rõ ràng để quản lý và ứng phó với các sự cố an ninh trong môi trường máy tính hoặc mạng.
 
-![](images\ir-lifecycle.png)
+![](images/ir-lifecycle.png)
 
 Cần lưu ý rằng xử lý sự cố không chỉ giới hạn ở các sự cố xâm nhập.
 
