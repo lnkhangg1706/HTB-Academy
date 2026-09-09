@@ -143,9 +143,13 @@ Trước khi bắt đầu nói về xử lý sự cố, chúng ta cần hiểu v
 
 Cyber kill chain gồm bảy giai đoạn khác nhau, như minh họa trong hình dưới đây:
 
+![](images/Cyber_kill_chain.png)
+
 ### Các giai đoạn của Cyber Kill Chain
 
 Giai đoạn Recon (Reconnaissance — trinh sát) là giai đoạn đầu tiên, bao gồm việc kẻ tấn công lựa chọn mục tiêu. Ngoài ra, kẻ tấn công thu thập thông tin để hiểu rõ hơn về mục tiêu và thu thập càng nhiều dữ liệu hữu ích càng tốt; dữ liệu này có thể được sử dụng không chỉ trong giai đoạn này mà còn ở những giai đoạn khác của chuỗi. Một số kẻ tấn công thích thu thập thông tin thụ động từ các nguồn trên web như LinkedIn và Instagram, cũng như từ tài liệu trên các trang web của tổ chức mục tiêu. Tin tuyển dụng và các đối tác của công ty thường tiết lộ thông tin về công nghệ được sử dụng trong tổ chức mục tiêu. Chúng có thể cung cấp thông tin cực kỳ cụ thể về công cụ antivirus, hệ điều hành và công nghệ mạng. Những kẻ tấn công khác tiến thêm một bước: chúng bắt đầu “thăm dò” và chủ động quét các ứng dụng web bên ngoài cùng các địa chỉ IP thuộc tổ chức mục tiêu.
+
+![](images/ir_recon.png)
 
 Trong giai đoạn Weaponize (chuẩn bị vũ khí), mã độc dùng để giành quyền truy cập ban đầu được phát triển và nhúng vào một dạng mã khai thác hoặc payload có thể chuyển đến mục tiêu. Mã độc này được thiết kế cực kỳ gọn nhẹ và không bị antivirus cùng các công cụ phát hiện nhận diện. Có khả năng kẻ tấn công đã thu thập thông tin để xác định công nghệ antivirus hoặc EDR đang có trong tổ chức mục tiêu. Xét tổng thể, mục đích duy nhất của giai đoạn ban đầu này là cung cấp khả năng truy cập từ xa vào một máy bị xâm nhập trong môi trường mục tiêu, đồng thời có khả năng duy trì hiện diện qua các lần khởi động lại máy và triển khai thêm công cụ cùng chức năng theo nhu cầu.
 
@@ -174,6 +178,8 @@ Một framework khác để hiểu hành vi của đối phương là MITRE ATT&
 MITRE ATT&CK Enterprise Matrix là một cơ sở tri thức ghi lại hành vi của đối phương đã được quan sát trong thực tế, nhắm vào các môi trường CNTT doanh nghiệp (Windows, Linux, macOS, đám mây, mạng, thiết bị di động, v.v.). Nó được trình bày dưới dạng ma trận, trong đó các cột thể hiện mục tiêu của đối phương (chiến thuật), còn các ô là những kỹ thuật kẻ tấn công sử dụng để đạt được các mục tiêu đó. Framework này giúp bên phòng thủ hiểu, mô hình hóa, phát hiện và ứng phó với hành vi của kẻ tấn công một cách có cấu trúc.
 
 Ảnh chụp màn hình dưới đây minh họa một ví dụ về MITRE ATT&CK Enterprise Matrix:
+
+![](images/mitreintro.png)
 
 https://attack.mitre.org/matrices/enterprise/
 
@@ -207,6 +213,8 @@ Sub-technique là các kỹ thuật con của một kỹ thuật, mô tả một
 
 Trong sơ đồ dưới đây, Pyramid of Pain (kim tự tháp mức độ khó khăn đối với đối phương) minh họa mức độ nỗ lực mà đối phương phải bỏ ra để thay đổi chiến thuật khi bên phòng thủ phát hiện và chặn các loại chỉ báo khác nhau. Ở đáy kim tự tháp là những chỉ báo đơn giản như giá trị hash, địa chỉ IP và tên miền — kẻ tấn công có thể dễ dàng thay đổi chúng (mức độ khó khăn thấp).
 
+![](images/ir_mitre.png)
+
 Ví dụ, chặn một IP độc hại trong tình huống “Command and Control” (T1071) của MITRE ATT&CK chỉ làm chậm đối phương đôi chút vì chúng có thể nhanh chóng chuyển sang một máy chủ C2 mới. Tiến lên phía trên, các dấu vết trên mạng và máy tính (như khóa registry, tên mutex hoặc tên tệp) tương ứng với những kỹ thuật cụ thể trong ATT&CK (ví dụ: T1547.001 – Registry Run Keys/Startup Folder). Chúng đòi hỏi nhiều nỗ lực hơn để thay đổi và là những chỉ báo bền vững hơn đối với bên phòng thủ.
 
 Ở đỉnh kim tự tháp là công cụ, chiến thuật, kỹ thuật và quy trình (TTPs) — những yếu tố này gắn trực tiếp với phần cốt lõi của MITRE ATT&CK. Phát hiện và làm gián đoạn chúng (ví dụ: xác định việc lạm dụng PowerShell theo T1059 hoặc chèn mã vào tiến trình theo T1055) buộc đối phương phải thay đổi căn bản cách hoạt động, gây ra mức độ khó khăn cao nhất.
@@ -229,7 +237,11 @@ Username: htb-analyst
 Password: P3n#31337@LOG
 ```
 
+![](images/ir_hive.png)
+
 Sau khi đăng nhập, dashboard sẽ được hiển thị. Chúng ta có thể xem trang cảnh báo như trong ảnh chụp màn hình dưới đây để xem và quản lý cảnh báo hiệu quả.
+
+![](images/ir_hive1.png)
 
 ### Ví dụ ánh xạ MITRE ATT&CK
 
