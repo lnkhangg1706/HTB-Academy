@@ -907,9 +907,4 @@ Một người dùng mở tệp đính kèm, khiến một downloader được t
 - Nhiệm vụ 1: Ngoài ra, bạn được cung cấp một số tệp event log (tức logs-wazuh.zip). Một trong các nhiệm vụ là giải mã một số lệnh PowerShell và trích xuất IOC từ chúng.
 - Nhiệm vụ 2: Xác định người dùng đã thực thi lệnh PowerShell đáng ngờ.
 
-## Kiểm tra độ đầy đủ
-
-- Đã dịch toàn bộ nội dung bài học được cung cấp cho section 1–11. Các phần giao diện, banner, điều hướng, trạng thái lab và nhãn câu hỏi trống đã được lược bỏ.
-- Bản dán chưa chứa hình ảnh và nội dung cụ thể của các câu hỏi chấm điểm trên HTB. Các câu dẫn hình, bảng, đoạn mã, log và nhiệm vụ thực hành có trong nguồn đã được giữ lại.
-- Section 10 của nguồn có điểm không nhất quán: đoạn mở đầu mô tả tác nhân thứ hai đã đưa dữ liệu ra ngoài, còn phần sau mô tả Silent Jackal chỉ để lại tệp đánh dấu; mốc “sau một tuần” cũng chưa khớp rõ với các ngày liệt kê. Bản dịch giữ nguyên các chi tiết này. Tên “Insights Nexus” ở section 11 được giữ như nguồn, dù các section trước dùng “Insight Nexus”.
 
