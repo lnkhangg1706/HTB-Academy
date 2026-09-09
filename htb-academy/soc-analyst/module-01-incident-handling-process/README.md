@@ -266,6 +266,8 @@ Tương tự Cyber Kill Chain, việc ứng phó sự cố cũng có những gia
 
 Theo định nghĩa của NIST, quy trình xử lý sự cố gồm bốn giai đoạn riêng biệt sau:
 
+![](images/ir-lifecycle.png)
+
 Người xử lý sự cố dành phần lớn thời gian cho hai giai đoạn đầu: chuẩn bị và phát hiện, phân tích. Đây là nơi chúng ta, với vai trò người xử lý sự cố, dành nhiều thời gian để nâng cao năng lực và tìm kiếm sự kiện độc hại tiếp theo. Khi phát hiện một sự kiện độc hại, chúng ta chuyển sang giai đoạn tiếp theo và ứng phó với sự kiện đó (nhưng phải luôn có nguồn lực hoạt động ở hai giai đoạn đầu để năng lực chuẩn bị và phát hiện không bị gián đoạn). Như có thể thấy trong hình, quy trình mang tính chu kỳ chứ không tuyến tính. Điểm chính cần hiểu ở đây là khi phát hiện bằng chứng mới, các bước tiếp theo cũng có thể thay đổi. Điều hết sức quan trọng là bảo đảm chúng ta không bỏ qua bước nào trong quy trình và hoàn tất một bước trước khi chuyển sang bước tiếp theo. Ví dụ, nếu phát hiện mười máy bị nhiễm, chắc chắn chúng ta không nên chỉ ngăn chặn năm máy rồi bắt đầu loại bỏ trong khi năm máy còn lại vẫn bị nhiễm. Cách tiếp cận như vậy có thể không hiệu quả vì ít nhất chúng ta đang báo cho kẻ tấn công biết rằng đã phát hiện và đang truy tìm chúng; như có thể hình dung, điều này có thể dẫn đến những hậu quả khó lường.
 
 Như vậy, xử lý sự cố có hai hoạt động chính là điều tra và phục hồi. Hoạt động điều tra nhằm:
@@ -294,6 +296,8 @@ Trong giai đoạn chuẩn bị, chúng ta cần bảo đảm có:
 - Đội ngũ nhân viên được đào tạo (ở mức tối đa có thể, thông qua hoạt động nâng cao nhận thức bảo mật hoặc những hình thức đào tạo khác).
 - Các chính sách và tài liệu rõ ràng.
 - Công cụ (phần mềm và phần cứng).
+
+![](images/ir_preparation.png)
 
 ### Chính sách và tài liệu rõ ràng
 
@@ -453,6 +457,8 @@ Như có thể suy ra, dòng thời gian chủ yếu tập trung vào hành vi c
 
 Chúng ta cũng có thể xem một cảnh báo liên quan đến bản ghi sự kiện này trong nền tảng quản lý case TheHive.
 
+![](images/hivealert1.png)
+
 Hãy di chuyển xuống cuối section này và nhấp vào "Click here to spawn the target system!" (nhấp vào đây để khởi tạo hệ thống mục tiêu). Sau đó, mở trang web TheHive tại "Target IP:9000", trên cổng 9000, sử dụng thông tin xác thực được cung cấp để xem các cảnh báo.
 
 Chúng ta có thể tự nhận xử lý cảnh báo, tạo case, làm việc trên đó, thêm chi tiết về sự cố vào case; sau khi điều tra hoàn tất, có thể ghi lại toàn bộ phát hiện và bài học trong case rồi đóng nó.
@@ -498,6 +504,8 @@ Cuộc điều tra bắt đầu từ thông tin thu thập ban đầu (và còn 
 - Tạo và sử dụng các chỉ báo xâm nhập (IOC).
 - Xác định manh mối mới và các hệ thống bị ảnh hưởng.
 - Thu thập và phân tích dữ liệu từ những manh mối mới và hệ thống bị ảnh hưởng.
+
+![](images/ir-ioc.png)
 
 Bây giờ, hãy giải thích kỹ hơn về quy trình được minh họa phía trên.
 
@@ -578,6 +586,8 @@ Ví dụ, trong báo cáo này, chúng ta có thể xem mục "Downloadable copy
 
 Trong TheHive, chúng ta có thể thêm IOC vào mục observables (các đối tượng quan sát được) của một cảnh báo.
 
+![](images/hivealert2.png)
+
 Để sử dụng IOC, chúng ta phải triển khai một công cụ thu thập hoặc tìm kiếm IOC (có sẵn hoặc của bên thứ ba, và có thể trên quy mô lớn). Một cách tiếp cận phổ biến là sử dụng WMI hoặc PowerShell cho các thao tác liên quan đến IOC trong môi trường Windows.
 
 Một lời cảnh báo! Trong quá trình điều tra, chúng ta phải đặc biệt cẩn thận để tránh thông tin xác thực của những người dùng có đặc quyền cao bị lưu vào bộ nhớ đệm khi kết nối đến các hệ thống có khả năng đã bị xâm nhập (thực ra là với bất kỳ hệ thống nào). Cụ thể hơn, cần bảo đảm chỉ sử dụng các giao thức kết nối và công cụ không lưu thông tin xác thực vào bộ nhớ đệm sau khi đăng nhập thành công (chẳng hạn WinRM). Các lần đăng nhập Windows có logon type 3 (Network Logon) thường không lưu thông tin xác thực vào bộ nhớ đệm trên hệ thống từ xa. Ví dụ điển hình nhất về việc “hiểu công cụ của mình” là "PsExec". Khi sử dụng "PsExec" với thông tin xác thực được chỉ định tường minh, thông tin đó sẽ được lưu vào bộ nhớ đệm trên máy từ xa. Khi sử dụng "PsExec" mà không cung cấp thông tin xác thực, thông qua phiên của người dùng đang đăng nhập, thông tin xác thực không được lưu vào bộ nhớ đệm trên máy từ xa. Đây là một ví dụ rất rõ cho thấy cùng một công cụ để lại những dấu vết khác nhau, vì vậy chúng ta phải nắm được điều đó.
@@ -602,6 +612,8 @@ Ví dụ: tính năng "Attack Discovery" của Elastic Security sử dụng AI t
 
 AI Attack Discovery sử dụng LLM (large language model — mô hình ngôn ngữ lớn) để phân tích cảnh báo trong một môi trường và xác định mối đe dọa. Bản tóm tắt thể hiện một cuộc tấn công và chỉ ra mối quan hệ giữa nhiều cảnh báo để giúp xác định những người dùng và máy tính có liên quan. Nó cũng hiển thị các ánh xạ MITRE ATT&CK. Dưới đây là một ví dụ về giao diện kết quả phát hiện cuộc tấn công:
 
+![](images/ai-attack.png)
+
 Trong kết quả phát hiện này, AI hỗ trợ bằng cách xem xét nhiều cảnh báo và tạo ra một cái nhìn tổng quan đầy đủ về cuộc tấn công, xác định những hoạt động chính đã xảy ra trong sự cố. AI cũng có thể hỗ trợ ứng phó sự cố. Một số trường hợp sử dụng bao gồm:
 
 - Tự động triage và xác định thứ tự ưu tiên cảnh báo.
@@ -620,6 +632,8 @@ Hãy di chuyển xuống cuối section này và nhấp vào "Click here to spaw
 ## Section 8/11 — Giai đoạn ngăn chặn, loại bỏ và phục hồi
 
 Khi điều tra hoàn tất và chúng ta đã hiểu loại sự cố cùng tác động đối với hoạt động kinh doanh (dựa trên toàn bộ manh mối thu thập được và thông tin tập hợp trong dòng thời gian), đã đến lúc bước vào giai đoạn ngăn chặn để tránh sự cố gây thêm thiệt hại.
+
+![](images/ir_stages.png)
 
 ### Containment (ngăn chặn)
 
@@ -649,6 +663,8 @@ Giai đoạn phục hồi trong một số sự cố lớn có thể mất nhi�
 
 Trong giai đoạn này, mục tiêu của chúng ta là ghi lại sự cố và cải thiện năng lực dựa trên những bài học rút ra từ nó. Giai đoạn này cho chúng ta cơ hội nhìn lại mối đe dọa bằng cách hiểu những gì đã xảy ra, những gì mình đã làm và kết quả của các hành động, hoạt động đó. Cách tốt nhất để thu thập và phân tích thông tin này là tổ chức cuộc họp với tất cả các bên liên quan đã tham gia trong sự cố. Cuộc họp thường diễn ra trong vòng vài ngày sau sự cố, khi báo cáo sự cố đã được hoàn thiện.
 
+![](images/post-incident.png)
+
 ### Báo cáo
 
 Báo cáo cuối cùng là một phần thiết yếu của toàn bộ quy trình. Một báo cáo đầy đủ sẽ chứa câu trả lời cho các câu hỏi như:
@@ -675,6 +691,8 @@ Lưu ý: Chúng ta sẽ tìm hiểu phần báo cáo của quy trình xử lý s
 Nạn nhân trong sự cố này là Insight Nexus, một công ty nghiên cứu thị trường và phân tích dữ liệu quy mô vừa có trụ sở tại Singapore. Họ cung cấp thông tin tình báo cạnh tranh và hiểu biết về người tiêu dùng cho khách hàng toàn cầu, bao gồm các công ty Fortune 500 trong lĩnh vực CNTT và tài chính. Hạ tầng của họ có nhiều ứng dụng, máy chủ và máy tính, nhưng chúng ta sẽ tập trung vào các thành phần quan trọng như một tập hợp ứng dụng hướng ra Internet phục vụ khách hàng, một máy chủ ManageEngine để quản trị CNTT và một cổng báo cáo khách hàng dựa trên PHP. Do tính chất công việc, họ trở thành mục tiêu hấp dẫn đối với những đối phương quan tâm đến việc đánh cắp dữ liệu khách hàng.
 
 Hãy xem xét sự cố để hiểu một số thách thức người xử lý sự cố phải đối mặt. Sự cố này minh họa các mô hình được quan sát lặp đi lặp lại trong thực tế. Nạn nhân trong tình huống là Insight Nexus, một công ty nghiên cứu thị trường toàn cầu xử lý dữ liệu cạnh tranh nhạy cảm cho các khách hàng nổi tiếng trong lĩnh vực CNTT. Công ty trở thành mục tiêu của hai nhóm đe dọa riêng biệt hoạt động đồng thời trong môi trường của mình. Tác nhân đe dọa thứ nhất xâm nhập được khi các quản trị viên hệ thống quên đổi mật khẩu mặc định admin/admin trên một ứng dụng hướng ra Internet, cụ thể là ManageEngine ADManager Plus, sau một lần cập nhật sản phẩm. Lợi dụng điều này, kẻ tấn công đăng nhập thành công, tiến hành trinh sát, lập bản đồ người dùng và máy tính, rồi cuối cùng tạo các tài khoản Active Directory mới có đặc quyền. Sử dụng một trong những tài khoản vừa tạo, đối phương tiếp tục pivot sâu hơn vào môi trường, xác định được một dịch vụ RDP bị mở ra bên ngoài do cấu hình sai. Khai thác điểm truy cập đó, chúng gia tăng quyền kiểm soát và cuối cùng dùng Group Policy Objects (GPOs) để triển khai spyware qua một gói MSI trên nhiều endpoint.
+
+![](images/insights.png)
 
 Các hoạt động này không bị phát hiện trong nhiều ngày. Sự cố lần đầu được phát hiện vào một ngày khi một nhà phân tích SOC điều tra cảnh báo trên TheHive (nền tảng ứng phó sự cố an ninh) liên quan đến việc tạo một tệp đáng ngờ tên checkme.txt trong thư mục gốc của máy chủ web. Khi điều tra, họ phát hiện tệp được cố ý đặt ở đó như một chữ ký — "SilentJackal was here". Dấu vết bất thường này thúc đẩy cuộc điều tra sâu hơn. Điều khiến tình hình phức tạp hơn là sau đó đội SOC nhận ra hai nhóm tác nhân đe dọa khác nhau đang hoạt động trong cùng môi trường. Trong khi nhóm thứ nhất vẫn đang thăm dò và triển khai các cơ chế duy trì hiện diện, một tác nhân thứ hai trước đó đã xâm nhập một ứng dụng PHP có lỗ hổng, đưa dữ liệu nghiên cứu thị trường nhạy cảm ra ngoài và giảm đáng kể hoạt động sau khi đạt mục tiêu, chỉ còn thỉnh thoảng kết nối đến một IP bên ngoài.
 
@@ -713,9 +731,13 @@ Khoảng trống phát hiện: Có quá nhiều cảnh báo về việc tạo t�
 
 Đội SOC bắt đầu điều tra sự cố này và phát hiện nhiều lần trinh sát các ứng dụng web bên ngoài.
 
+![](<images/insights1.png>)
+
 Khi điều tra thêm, đội ứng phó phát hiện rằng vào 2025-10-01 03:12:02, tác nhân đe dọa Crimson Fox có được quyền truy cập ban đầu thông qua ManageEngine. Ban đầu, chúng thực hiện các lần thử đăng nhập có chủ đích vào manage.insightnexus.com. Chúng phát hiện thông tin xác thực mặc định (tức admin/admin) có hiệu lực, nghĩa là quản trị viên hệ thống đã quên đổi thông tin xác thực mặc định sau một lần cập nhật hoặc đã để ứng dụng web có thể được mọi người trên Internet công cộng truy cập. Kết quả là điều không may cho tổ chức, và các tác nhân đe dọa thực hiện đăng nhập web tương tác qua HTTPS. Báo cáo kiểm toán đăng nhập thể hiện hoạt động đăng nhập thành công này.
 
 Sơ suất của tổ chức: Dù có khuyến cáo từ nhà cung cấp, thông tin xác thực mặc định chưa từng được thay đổi. Không bắt buộc xác thực đa yếu tố và không có WAF kiểm tra tại endpoint này. Các sự kiện đăng nhập của ứng dụng web không được gửi đến SIEM tập trung.
+
+![](images/insights2.png)
 
 Có một lỗ hổng web Java liên quan đến sản phẩm ManageEngine ADManager Plus, cho phép thực thi mã từ xa mà không cần xác thực. Tác nhân đã tận dụng lỗ hổng này và thiết lập C2 đi ra qua HTTPS đến 103.112.60.117 (một máy trên đám mây do kẻ tấn công kiểm soát), giả dạng lưu lượng cập nhật. Sysmon Event ID 3 (phát hiện kết nối mạng) sau đây đã được ghi lại:
 
@@ -730,6 +752,8 @@ DestinationPort: 443
 ```
 
 Vào 2025-10-02 04:02:11, kẻ tấn công liệt kê người dùng và máy tính trong domain thông qua các truy vấn từ console ManageEngine. Tận dụng chỗ đứng trên ManageEngine, chúng cũng tạo một tài khoản Domain Administrator mới. Khi liệt kê Active Directory, chúng phát hiện một máy Windows 10 (DEV-021) có cổng RDP mở công khai. Máy desktop này thỉnh thoảng được các nhà phát triển sử dụng để thực hiện công việc phát triển và phát hành bằng cách kết nối RDP trực tiếp đến IP công cộng của máy khi làm việc tại nhà. Kẻ tấn công kết nối RDP trực tiếp vào máy này bằng tài khoản Domain Administrator vừa tạo.
+
+![](images/insights3.png)
 
 Đối với hoạt động này, bản ghi sự kiện sau được tạo trong Windows Event Logs với Event ID 4624.
 
@@ -755,6 +779,8 @@ An account was successfully logged on.
 ```
 
 Sau khi đăng nhập thành công, kẻ tấn công tiến hành trinh sát domain. Chúng tìm thấy một số tài nguyên chia sẻ tệp đáng quan tâm trên file server và nhiều lần thử truy cập. Trên file server, chúng tìm được những thư mục dự án khách hàng chứa báo cáo dự thảo, dữ liệu khảo sát và dự báo thị trường.
+
+![](images/insights0.png)
 
 Trên file server, nhiều bản ghi sự kiện được tạo, chẳng hạn 5140(S, F): A network share object was accessed (một đối tượng chia sẻ mạng đã được truy cập). Tuy nhiên, chưa có quy tắc tạo cảnh báo riêng cho những sự kiện RDP từ IP công cộng này.
 
@@ -809,6 +835,8 @@ level: medium
 
 Sau khi thăm dò và quan sát trong một tuần, chúng bắt đầu nén và đưa những dữ liệu được lựa chọn ra ngoài. Kẻ tấn công đóng gói tài liệu khách hàng đã đánh cắp vào một tệp tên diagnostics_data.zip; tên này được chọn để giống dữ liệu telemetry thông thường. Sau đó, tệp nén được tải lên máy do kẻ tấn công kiểm soát qua HTTPS. Vì tên tệp giống dữ liệu chẩn đoán hợp lệ và quá trình tải lên sử dụng HTTPS tiêu chuẩn, hoạt động này không lập tức gây báo động. Chiến thuật này làm tăng cơ hội đưa dữ liệu ra ngoài của kẻ tấn công trước khi bên phòng thủ chuyển sự việc lên cấp xử lý cao hơn.
 
+![](images/insights6.png)
+
 Sau đó, vào 2025-10-04 02:10:45, từ DEV-021, chúng thực thi một số script PowerShell sử dụng thông tin xác thực quản trị domain để tạo một Group Policy Object (GPO) nhằm đẩy gói MSI (java-update.msi) ra toàn domain. Gói MSI này tạo một scheduled task (tác vụ theo lịch) để chạy một tiến trình thực hiện hoạt động gián điệp và đưa dữ liệu ra ngoài trên các máy.
 
 Các sự kiện này cũng được ghi nhận trong event log, chẳng hạn việc tạo một tệp .msi mới dưới dạng Sysmon Event ID 11.
@@ -825,7 +853,11 @@ Sysmon Event 1: Image: C:\Windows\System32\msiexec.exe CommandLine: "msiexec /i 
 
 Mã độc có khả năng gián điệp và đưa dữ liệu ra ngoài này được triển khai trên tất cả máy trong domain bằng GPO.
 
+![](images/insights4.png)
+
 Vào khoảng cùng thời điểm, một tác nhân đe dọa khác là Silent Jackal cũng thực hiện một số hoạt động trên cổng báo cáo riêng biệt dựa trên PHP. Máy chủ này có một lỗ hổng tải tệp lên chưa được vá, bị tác nhân khai thác để giành quyền truy cập máy chủ. Silent Jackal tải một tệp vào thư mục gốc của máy chủ web. Hoạt động của chúng dường như chỉ giới hạn ở việc để lại tệp đánh dấu checkme.txt. Điều này tạo ra nhiễu trong môi trường và cung cấp cho bên phòng thủ manh mối đầu tiên về vụ xâm nhập.
+
+![](images/insights5.png)
 
 Tuy nhiên, tác nhân đe dọa không tiến xa hơn quyền truy cập ban đầu. Đây có khả năng là một vụ xâm nhập có kỹ năng thấp nhằm báo hiệu sự hiện diện, thay vì gây thiệt hại ngay lập tức.
 
@@ -908,6 +940,8 @@ Nhiệm vụ 1: Tạo một case mới trong TheHive. Tìm tất cả cảnh bá
 Nhiệm vụ 2: Thực hiện triage, enrichment và correlation (tương quan) trong TheHive. Trong phần ghi chú của một cảnh báo, bạn có thể thêm thông tin hữu ích để bổ sung ngữ cảnh.
 
 Nhiệm vụ 3: Một trong các cảnh báo liên quan đến Insights Nexus trong TheHive có thông tin ở phần ghi chú. Đầu ra lệnh netstat cho thấy một số kết nối đến các địa chỉ IP bên ngoài. Bạn có thể xác minh phát hiện này.
+
+![](images/ir-netstat.png)
 
 Đầu ra này được thu thập sau khi máy tính gia nhập lại domain sau phục hồi. Tuy nhiên, nó vẫn đang kết nối đến một địa chỉ IP. Nhà phân tích đã thêm thông tin này vào phần bình luận của cảnh báo.
 
