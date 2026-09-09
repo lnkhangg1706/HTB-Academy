@@ -39,6 +39,8 @@ Không có một định nghĩa duy nhất về sự cố an ninh CNTT, vì vậ
 
 Xử lý sự cố là một tập hợp các quy trình được xác định rõ ràng để quản lý và ứng phó với các sự cố an ninh trong môi trường máy tính hoặc mạng.
 
+![](images\ir-lifecycle.png)
+
 Cần lưu ý rằng xử lý sự cố không chỉ giới hạn ở các sự cố xâm nhập.
 
 Các loại sự cố khác, chẳng hạn như sự cố do người nội bộ có ý đồ xấu gây ra, các vấn đề về tính sẵn sàng và việc mất tài sản trí tuệ, cũng thuộc phạm vi xử lý sự cố. Một kế hoạch xử lý sự cố toàn diện cần bao quát nhiều loại sự cố và đưa ra các biện pháp thích hợp để nhận diện, ngăn chặn, loại bỏ và phục hồi sau sự cố, nhằm khôi phục hoạt động kinh doanh bình thường nhanh chóng và hiệu quả nhất có thể.
@@ -99,6 +101,8 @@ Nền tảng DFIR Labs còn có nhiều báo cáo sự cố khác. Bạn có th�
 
 https://thedfirreport.com/
 
+![](images/dfirreport.png)
+
 Dưới đây là một ví dụ khác về báo cáo sự cố từ Cybereason.
 
 CHAES: Mã độc mới nhắm vào thương mại điện tử tại Mỹ Latinh
@@ -122,6 +126,8 @@ Báo cáo ứng phó sự cố toàn cầu
 Xuyên suốt module này, chúng ta sẽ tham chiếu đến một tình huống sự cố để hiểu một số thách thức mà người xử lý sự cố phải đối mặt. Sự cố này minh họa những mô hình được quan sát lặp đi lặp lại trong các sự cố thực tế. Nạn nhân trong tình huống này là Insight Nexus, một công ty nghiên cứu thị trường toàn cầu xử lý dữ liệu cạnh tranh nhạy cảm cho các khách hàng nổi tiếng trong lĩnh vực CNTT. Công ty trở thành mục tiêu của hai nhóm đe dọa riêng biệt, hoạt động đồng thời trong môi trường của công ty.
 
 Sơ đồ dưới đây trình bày tổng quan về nạn nhân và các tác nhân đe dọa.
+
+![](images/insights1.png)
 
 Dựa trên thông tin đã thu thập, tác nhân đe dọa thứ nhất xâm nhập được khi các quản trị viên hệ thống quên thay đổi mật khẩu mặc định admin/admin trên một ứng dụng có thể truy cập từ Internet, cụ thể là ManageEngine ADManager Plus, sau một lần cập nhật sản phẩm. Lợi dụng điều này, kẻ tấn công đăng nhập thành công, tiến hành trinh sát, lập bản đồ người dùng và máy tính, rồi cuối cùng tạo các tài khoản Active Directory mới có đặc quyền. Sử dụng một trong những tài khoản vừa tạo, đối phương tiếp tục pivot (di chuyển qua hệ thống trung gian) sâu hơn vào môi trường, xác định được một dịch vụ RDP bị mở ra bên ngoài do cấu hình sai. Khai thác điểm truy cập đó, chúng gia tăng quyền kiểm soát và cuối cùng sử dụng Group Policy Objects (GPOs — các đối tượng chính sách nhóm) để triển khai spyware (phần mềm gián điệp) bằng một gói MSI trên nhiều endpoint (thiết bị đầu cuối).
 
