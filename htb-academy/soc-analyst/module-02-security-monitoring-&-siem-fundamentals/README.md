@@ -702,6 +702,7 @@ Có bốn điều cần chú ý trong cửa sổ này:
    ![](images/visualization39.png)
 
 2. Trường này cho biết tập dữ liệu (index) mà chúng ta sẽ sử dụng. Dữ liệu từ các nguồn hạ tầng khác nhau thường được tách vào những chỉ mục khác nhau, chẳng hạn mạng, Windows, Linux, v.v. Trong ví dụ cụ thể này, chúng ta sẽ chỉ định windows* trong "Index pattern".
+
 3. Thanh tìm kiếm này cho phép kiểm tra lại sự tồn tại của một trường cụ thể trong tập dữ liệu, như một cách khác để bảo đảm đang xem đúng dữ liệu. Chúng ta quan tâm đến trường user.name.keyword. Có thể dùng thanh tìm kiếm để nhanh chóng tìm và xác minh trường này có tồn tại, được phát hiện trong tập dữ liệu đã chọn hay không. Điều này cho phép xác nhận đang truy cập trường mong muốn và làm việc với dữ liệu chính xác.
 
    ![](images/visualization11.png)
