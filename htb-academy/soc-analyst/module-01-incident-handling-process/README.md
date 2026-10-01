@@ -958,5 +958,3 @@ Một người dùng mở tệp đính kèm, khiến một downloader được t
 
 - Nhiệm vụ 1: Ngoài ra, bạn được cung cấp một số tệp event log (tức logs-wazuh.zip). Một trong các nhiệm vụ là giải mã một số lệnh PowerShell và trích xuất IOC từ chúng.
 - Nhiệm vụ 2: Xác định người dùng đã thực thi lệnh PowerShell đáng ngờ.
-
-

@@ -986,5 +986,3 @@ Quản trị viên chỉ nên dùng PAW cho những kết nối từ xa đến m
 #### Nội dung trực quan hóa 7: Đăng nhập SSH
 
 Hãy nhớ rằng tài khoản root thông thường không được sử dụng.
-
-
