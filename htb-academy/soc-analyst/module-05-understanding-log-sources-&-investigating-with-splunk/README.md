@@ -449,12 +449,3 @@ Sau đó, truy cập `http://[Target IP]:8000`, mở ứng dụng Search & Repor
 Kết nối với HTB và khởi tạo hệ thống đích để nhận địa chỉ IP và trả lời câu hỏi.
 
 Hãy trả lời các câu hỏi bằng tiếng Anh để bảo đảm câu trả lời được đánh giá chính xác.
-
-### Kiểm tra độ đầy đủ
-
-- Đã dịch phần nội dung bài học của Section 1/6 và giữ đủ 33 khối ví dụ; đã bỏ các thành phần giao diện trang như quảng cáo giá, tiến độ, điểm thưởng, nút PRO và mục lục điều hướng của khóa học.
-- Bản nguồn chỉ có nhãn `Question 1`, `Question 2`, `Question 3`, chưa có nội dung của ba câu hỏi.
-- Sau câu hướng dẫn thêm tệp CSV làm bảng Lookup, bản nguồn có khoảng trống nhưng không có ảnh hoặc đường dẫn ảnh; thư mục `images/` hiện trống.
-- Các dấu escape Markdown trong bản dán được giải mã khi đưa ví dụ vào khối lệnh. Chuỗi dấu gạch chéo ngược trong regex trích xuất `filename` còn chưa rõ do định dạng nguồn; chưa xác minh lại với nội dung gốc trên HTB Academy.
-- Giữ nguyên cách giải thích của nguồn ở những chỗ chưa nhất quán: `totalCount` được mô tả là số máy; `where count < 100` được diễn giải là lọc bỏ các trường có số đếm dưới 100; phần giải thích truy vấn con ghi `Computer` trong khi truy vấn dùng `ComputerName`.
-- Section 2–6 chưa được cung cấp.
