@@ -405,8 +405,6 @@ Bằng cách kết hợp các lệnh và kỹ thuật SPL ở trên, chúng ta c
 
 Cuối cùng, hãy nhớ tuân theo các chính sách quản trị dữ liệu của tổ chức khi khám phá dữ liệu và source type, nhằm bảo đảm tuân thủ mọi hướng dẫn cần thiết về quyền riêng tư và bảo mật.
 
-Bạn có thể áp dụng thành công từng truy vấn được đề cập ở trên đối với dữ liệu trong phiên bản Splunk trên máy đích mà bạn có thể khởi tạo bên dưới. Chúng tôi rất khuyến khích bạn chạy và thậm chí chỉnh sửa những truy vấn này để làm quen với SPL (Search Processing Language) cùng các khả năng của nó.
-
 #### Cách 2: Sử dụng giao diện người dùng của Splunk để nhận diện dữ liệu và trường
 
 Khi sử dụng giao diện người dùng của ứng dụng Search & Reporting, việc nhận diện các loại nguồn dữ liệu sẵn có, dữ liệu chúng chứa và những trường bên trong đòi hỏi tương tác với nhiều phần khác nhau của giao diện. Hãy xem cách sử dụng hiệu quả giao diện Splunk Web để nhận diện những thành phần này.
@@ -439,13 +437,3 @@ Ví dụ, nếu có một Data Model mô tả lưu lượng web, chúng ta có t
 
   ![](images/115.png)
   ![](images/pivot.png)
-
-### Bài tập thực hành
-
-Đi đến cuối section này trên HTB Academy và nhấp vào `Click here to spawn the target system!` để khởi tạo hệ thống đích.
-
-Sau đó, truy cập `http://[Target IP]:8000`, mở ứng dụng Search & Reporting và trả lời các câu hỏi bên dưới.
-
-Kết nối với HTB và khởi tạo hệ thống đích để nhận địa chỉ IP và trả lời câu hỏi.
-
-Hãy trả lời các câu hỏi bằng tiếng Anh để bảo đảm câu trả lời được đánh giá chính xác.

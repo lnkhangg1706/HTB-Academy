@@ -7,7 +7,6 @@
 - [Section 3/6 — Thuật ngữ Threat Hunting](#section-03)
 - [Section 4/6 — Kiến thức nền tảng về Threat Intelligence](#section-04)
 - [Section 5/6 — Săn tìm Stuxbot](#section-05)
-- [Section 6/6 — Đánh giá kỹ năng](#section-06)
 
 <a id="section-01"></a>
 
@@ -413,11 +412,9 @@ Dưới đây là danh sách đầy đủ tất cả IOCs đã được xác đ�
 
 ### Săn tìm Stuxbot bằng Elastic Stack
 
-Đi đến cuối section này và nhấp vào **Click here to spawn the target system!** để khởi tạo hệ thống mục tiêu.
+Trong Kibana, mở thanh điều hướng bên cạnh rồi chọn **Discover**. Trong ví dụ này, nhấp biểu tượng lịch, chọn **last 15 years** và nhấp **Apply** để bao quát dữ liệu lịch sử.
 
-Bây giờ, truy cập http://[Target IP]:5601, nhấp nút bật/tắt thanh điều hướng bên cạnh rồi chọn **Discover**. Tiếp theo, nhấp biểu tượng lịch, chỉ định **last 15 years** và nhấp **Apply**.
-
-Đồng thời, hãy đặt múi giờ **Europe/Copenhagen** thông qua liên kết http://[Target IP]:5601/app/management/kibana/settings.
+Ví dụ sử dụng múi giờ **Europe/Copenhagen**, được cấu hình trong phần thiết lập Kibana.
 
 ![](images/hunt22.png)
 
@@ -436,7 +433,7 @@ Tình báo mối đe dọa hiện có bắt nguồn từ tháng 3 năm 2023, vì
 
 Tổ chức của chúng ta tương đối nhỏ, có khoảng 200 nhân viên chủ yếu làm marketing trực tuyến, nên nhu cầu tài nguyên CNTT không lớn. Các ứng dụng Office là phần mềm chính được sử dụng, còn Gmail là nhà cung cấp email tiêu chuẩn, được truy cập qua trình duyệt web. Microsoft Edge là trình duyệt mặc định trên laptop của công ty. Hỗ trợ kỹ thuật từ xa được thực hiện qua TeamViewer, và tất cả thiết bị công ty được quản lý thông qua Active Directory Group Policy Objects (GPOs). Chúng ta đang cân nhắc chuyển sang Microsoft Intune để quản lý endpoint trong đợt nâng cấp sắp tới từ Windows 10 lên Windows 11.
 
-#### Nhiệm vụ
+#### Mục tiêu phân tích
 
 Nhiệm vụ của chúng ta xoay quanh một báo cáo tình báo mối đe dọa về phần mềm độc hại mang tên “Stuxbot”. Chúng ta cần sử dụng Indicators of Compromise (IOCs) được cung cấp để điều tra xem tổ chức có dấu hiệu bị xâm phạm hay không.
 
@@ -643,41 +640,3 @@ Các trường liên quan: winlog.event_id hoặc event.code, winlog.event_data.
 Kết quả khá đáng chú ý: hai lần thử thất bại với tài khoản administrator, vào khoảng thời điểm hoạt động đáng ngờ ban đầu được phát hiện. Sau đó có nhiều lần đăng nhập thành công với “svc-sql1”. Có vẻ chúng đã thử bẻ khóa mật khẩu administrator nhưng thất bại. Tuy nhiên, hai ngày sau, vào ngày 28, chúng ta quan sát thấy các lần thử thành công với svc-sql1.
 
 Đến giai đoạn này, chúng ta đã tích lũy được lượng thông tin đáng kể để trình bày và bắt đầu quy trình ứng phó sự cố toàn diện theo chính sách công ty.
-
-Vui lòng chờ **3–5 phút** để Kibana sẵn sàng sau khi khởi tạo mục tiêu cho các câu hỏi bên dưới.
-
-Hãy trả lời các câu hỏi bằng tiếng Anh để hệ thống đánh giá câu trả lời chính xác.
-
-<a id="section-06"></a>
-
-## Section 6/6 — Đánh giá kỹ năng
-
-### Săn tìm Stuxbot (Vòng 2)
-
-Những chi tiết mới được phát hiện làm sáng tỏ chiến lược hoạt động của phiên bản Stuxbot mới nhất.
-
-- Các phiên bản Stuxbot mới nhất đang tận dụng thư mục `C:\Users\Public` làm nơi trung chuyển để triển khai những tiện ích bổ sung.
-- Các phiên bản Stuxbot mới nhất đang sử dụng các khóa Run trong Registry làm cơ chế bảo đảm duy trì sự hiện diện trên hệ thống bị nhiễm.
-- Các phiên bản Stuxbot mới nhất đang sử dụng PowerShell Remoting để di chuyển ngang trong mạng và giành quyền truy cập các domain controller.
-
-### Dữ liệu sẵn có
-
-Chiến lược an ninh mạng được triển khai dựa trên việc sử dụng Elastic Stack làm giải pháp SIEM. Thông qua chức năng **Discover**, chúng ta có thể xem log từ nhiều nguồn. Các nguồn này bao gồm:
-
-- Log kiểm toán Windows, được phân loại theo index pattern `windows*`.
-- Log System Monitor (Sysmon), cũng thuộc index pattern `windows*`; bản gốc có tham chiếu “tại đây” để tìm hiểu thêm về Sysmon.
-- Log PowerShell, cũng được lập chỉ mục dưới `windows*`; bản gốc có tham chiếu “tại đây” để tìm hiểu thêm về log PowerShell.
-- Log Zeek, một công cụ giám sát an ninh mạng, được phân loại theo index pattern `zeek*`.
-
-### Các nhiệm vụ
-
-Đi đến cuối section này và nhấp vào **Click here to spawn the target system!** để khởi tạo hệ thống mục tiêu.
-
-Bây giờ, truy cập http://[Target IP]:5601, nhấp nút bật/tắt thanh điều hướng bên cạnh rồi chọn **Discover**. Tiếp theo, nhấp biểu tượng lịch, chỉ định **last 15 years** và nhấp **Apply**.
-
-**Hunt 1:** Tạo một truy vấn KQL để săn tìm **Lateral Tool Transfer** — chuyển công cụ giữa các hệ thống — đến `C:\Users\Public`. Nhập nội dung trường user.name trong document liên quan đến một công cụ được chuyển có tên bắt đầu bằng “r” làm câu trả lời.
-
-**Hunt 2:** Tạo một truy vấn KQL để săn tìm **Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder** — tự động thực thi khi khởi động hoặc đăng nhập thông qua khóa Run trong Registry / thư mục Startup. Nhập nội dung trường registry.value trong document liên quan đến hành động duy trì hiện diện dựa trên Registry đầu tiên làm câu trả lời.
-
-**Hunt 3:** Tạo một truy vấn KQL để săn tìm **PowerShell Remoting for Lateral Movement** — sử dụng PowerShell Remoting để di chuyển ngang. Nhập nội dung trường winlog.user.name trong document liên quan đến hoạt động di chuyển ngang hướng tới DC1 bằng PowerShell Remoting.
-

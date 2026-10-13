@@ -7,7 +7,6 @@
 - [Section 3/6 — Event Tracing for Windows (ETW)](#section-03)
 - [Section 4/6 — Khai thác dữ liệu từ ETW](#section-04)
 - [Section 5/6 — Get-WinEvent](#section-05)
-- [Section 6/6 — Đánh giá kỹ năng](#section-06)
 
 <a id="section-01"></a>
 
@@ -151,16 +150,6 @@ Dưới đây là danh sách minh họa, không bao quát hết, về các Windo
 - Event ID 7045 (một dịch vụ được cài vào hệ thống): Sự xuất hiện đột ngột của dịch vụ không rõ nguồn gốc có thể gợi ý cài đặt mã độc, vì nhiều loại mã độc tự cài dưới dạng dịch vụ.
 
 Hãy nhớ rằng một trong những yếu tố then chốt của phát hiện mối đe dọa là hiểu rõ thế nào là “bình thường” trong môi trường của mình. Những bất thường có thể chỉ ra mối đe dọa trong môi trường này lại có thể là hành vi bình thường trong môi trường khác. Cần tinh chỉnh hệ thống giám sát và cảnh báo phù hợp với môi trường để giảm thiểu false positive (dương tính giả) và giúp nhận ra mối đe dọa thực sự dễ hơn. Ngoài ra, cần có giải pháp quản lý log tập trung có thể thu thập, phân tích cú pháp và cảnh báo về những sự kiện này theo thời gian thực. Giám sát và xem xét các log thường xuyên có thể giúp phát hiện sớm, giảm thiểu mối đe dọa. Cuối cùng, cần bảo đảm tương quan những log này với các log hệ thống, bảo mật khác để có góc nhìn toàn diện hơn về sự kiện bảo mật trong môi trường.
-
-### Bài tập thực hành
-
-Di chuyển xuống cuối section này và nhấp Click here to spawn the target system! (nhấp vào đây để khởi tạo hệ thống mục tiêu).
-
-Bây giờ, kết nối RDP đến [Target IP] bằng thông tin xác thực được cung cấp, mở Windows Event Viewer và trả lời các câu hỏi bên dưới.
-
-```shellsession
-lnkhangg1706@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
-```
 
 <a id="section-02"></a>
 
@@ -359,16 +348,6 @@ Như có thể thấy, đầu ra của lệnh "sekurlsa::logonpasswords" cung c�
 Ví dụ, nếu thấy một tệp bất kỳ ("AgentEXE" trong trường hợp này) từ một thư mục bất kỳ ("Downloads" trong trường hợp này) cố truy cập LSASS, đó là hành vi bất thường. Ngoài ra, SourceUser khác TargetUser (ví dụ "waldo" là SourceUser và "SYSTEM" là TargetUser) càng làm rõ sự bất thường. Cũng cần lưu ý rằng trong quá trình credential dumping dựa trên mimikatz, người dùng phải yêu cầu SeDebugPrivileges. Như tên gọi, quyền này chủ yếu dùng để gỡ lỗi. Đây có thể là một IOC khác.
 
 Lưu ý rằng một số tiến trình hợp pháp có thể truy cập LSASS, chẳng hạn tiến trình liên quan đến xác thực hoặc các công cụ bảo mật như AV hay EDR.
-
-### Bài tập thực hành
-
-Di chuyển xuống cuối section này và nhấp Click here to spawn the target system! (nhấp vào đây để khởi tạo hệ thống mục tiêu).
-
-Sau đó, kết nối RDP đến [Target IP] bằng thông tin xác thực được cung cấp và trả lời các câu hỏi bên dưới. Đừng quên cấu hình Sysmon phù hợp trước khi tái hiện các cuộc tấn công.
-
-```shellsession
-lnkhangg1706@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
-```
 
 <a id="section-03"></a>
 
@@ -883,16 +862,6 @@ Cần lưu ý rằng với cấu hình SilkETW hiện tại, chúng ta không th
 
 Bài blog này cung cấp góc nhìn hữu ích về SilkETW cũng như việc nhận diện mã độc dựa trên .NET.
 
-### Bài tập thực hành
-
-Di chuyển xuống cuối section này và nhấp Click here to spawn the target system! (nhấp vào đây để khởi tạo hệ thống mục tiêu).
-
-Sau đó, kết nối RDP đến [Target IP] bằng thông tin xác thực được cung cấp và trả lời câu hỏi bên dưới.
-
-```shellsession
-lnkhangg1706@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
-```
-
 <a id="section-05"></a>
 
 ## Section 5/6 — Get-WinEvent
@@ -1393,27 +1362,3 @@ Message      : Process Create:
 
 - `-like "*-enc*"`: Đây là toán tử so sánh khớp chuỗi theo mẫu có ký tự đại diện, trong đó * biểu thị một chuỗi ký tự bất kỳ. Trong trường hợp này, nó tìm mọi dòng lệnh chứa -enc ở bất kỳ vị trí nào. Chuỗi -enc có thể thuộc các lệnh đáng ngờ; ví dụ, đây là tham số phổ biến trong lệnh PowerShell để biểu thị một lệnh đã mã hóa, có thể được dùng để làm rối script độc hại.
 - `| Format-List`: Cuối cùng, đầu ra của lệnh trước (những sự kiện đáp ứng điều kiện) được chuyển sang cmdlet Format-List. Cmdlet này hiển thị các thuộc tính của đối tượng đầu vào dưới dạng danh sách, giúp đọc và phân tích dễ hơn.
-
-### Bài tập thực hành
-
-Di chuyển xuống cuối section này và nhấp Click here to spawn the target system! (nhấp vào đây để khởi tạo hệ thống mục tiêu).
-
-Sau đó, kết nối RDP đến [Target IP] bằng thông tin xác thực được cung cấp và trả lời câu hỏi bên dưới.
-
-```shellsession
-lnkhangg1706@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
-```
-
-<a id="section-06"></a>
-
-## Section 6/6 — Đánh giá kỹ năng
-
-Để giúp bạn duy trì kỹ năng nhạy bén, quản lý SOC giao cho bạn nhiệm vụ phân tích log của các cuộc tấn công cũ và trả lời những câu hỏi cụ thể.
-
-Di chuyển xuống cuối section này và nhấp Click here to spawn the target system! (nhấp vào đây để khởi tạo hệ thống mục tiêu).
-
-Kết nối RDP đến [Target IP] bằng thông tin xác thực được cung cấp, kiểm tra các log trong những thư mục C:\Logs\* và trả lời các câu hỏi bên dưới.
-
-```shellsession
-lnkhangg1706@htb[/htb]$ xfreerdp /u:Administrator /p:'HTB_@cad3my_lab_W1n10_r00t!@0' /v:[Target IP] /dynamic-resolution
-```

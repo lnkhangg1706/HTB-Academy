@@ -12,7 +12,6 @@
 - [Section 8/11 — Ví dụ trực quan hóa SIEM 3: Đăng nhập RDP thành công liên quan đến tài khoản dịch vụ](#section-08)
 - [Section 9/11 — Ví dụ trực quan hóa SIEM 4: Người dùng được thêm vào hoặc xóa khỏi nhóm cục bộ (Trong khung thời gian cụ thể)](#section-09)
 - [Section 10/11 — Quy trình triage](#section-10)
-- [Section 11/11 — Đánh giá kỹ năng](#section-11)
 
 <a id="section-01"></a>
 
@@ -248,8 +247,6 @@ Elastic Common Schema (ECS) là một bộ từ vựng dùng chung, có thể m�
 - Khả năng tương tác với các giải pháp Elastic: Dùng các trường ECS bảo đảm khả năng tương thích đầy đủ với những tính năng và giải pháp nâng cao của Elastic Stack, như Elastic Security, Elastic Observability và Elastic Machine Learning. Điều này cho phép threat hunting nâng cao, phát hiện bất thường và giám sát hiệu năng.
 - Bảo đảm khả năng tương thích về sau: Vì ECS là schema nền tảng trên toàn Elastic Stack, áp dụng ECS bảo đảm khả năng tương thích trong tương lai với những cải tiến và tính năng mới được đưa vào hệ sinh thái Elastic.
 
-Vui lòng chờ 3-5 phút để Kibana sẵn sàng sau khi khởi tạo máy mục tiêu của các câu hỏi bên dưới.
-
 <a id="section-03"></a>
 
 ## Section 3/11 — Định nghĩa và kiến thức nền tảng về SOC
@@ -447,15 +444,9 @@ Trong section này và những section tiếp theo, chúng ta sẽ tạo một d
 
 ### Xây dựng dashboard và nội dung trực quan hóa đầu tiên
 
-Di chuyển xuống cuối section này và nhấp vào Click here to spawn the target system! (nhấp vào đây để khởi tạo hệ thống mục tiêu).
+Trong Kibana, mở thanh điều hướng bên cạnh rồi chọn "Dashboard".
 
-Bây giờ, truy cập http://[Target IP]:5601, nhấp nút bật/tắt điều hướng bên cạnh, rồi nhấp "Dashboard".
-
-Xóa dashboard "SOC-Alerts" hiện có như sau.
-
-![](images/visualization29.png)
-
-Khi truy cập lại trang Dashboard, chúng ta sẽ thấy thông báo cho biết hiện không có dashboard nào. Ngoài ra, sẽ có tùy chọn tạo Dashboard mới và nội dung trực quan hóa đầu tiên của nó. Để bắt đầu tạo dashboard đầu tiên, chỉ cần nhấp nút "Create new dashboard".
+Trên trang Dashboard, nhấp nút "Create new dashboard" để tạo dashboard mới, rồi thêm nội dung trực quan hóa đầu tiên.
 
 ![](images/dashboard.png)
 
@@ -537,7 +528,7 @@ Giả sử quản lý SOC đề xuất những tinh chỉnh sau:
 
 Hãy tinh chỉnh nội dung trực quan hóa đã tạo để đáp ứng những đề xuất trên.
 
-Truy cập http://[Target IP]:5601, nhấp nút bật/tắt điều hướng bên cạnh, rồi nhấp "Dashboard".
+Trong Kibana, mở thanh điều hướng bên cạnh rồi chọn "Dashboard".
 
 Dashboard đã tạo trước đó sẽ hiển thị. Hãy nhấp biểu tượng “bút chì”/chỉnh sửa.
 
@@ -597,8 +588,6 @@ Cuối cùng, hãy đặt tiêu đề cho nội dung trực quan hóa bằng cá
 
 Đừng quên nhấp nút "Save" (nút ở góc trên bên phải cửa sổ).
 
-Vui lòng chờ 3-5 phút để Kibana sẵn sàng sau khi khởi tạo máy mục tiêu của các câu hỏi bên dưới.
-
 <a id="section-07"></a>
 
 ## Section 7/11 — Ví dụ trực quan hóa SIEM 2: Đăng nhập thất bại (Người dùng bị vô hiệu hóa)
@@ -607,11 +596,9 @@ Trong ví dụ trực quan hóa SIEM này, chúng ta muốn tạo nội dung tr�
 
 Chúng ta nói “thất bại” vì không thể đăng nhập bằng một người dùng bị vô hiệu hóa, nên việc đăng nhập sẽ không bao giờ thành công ngay cả khi cung cấp đúng thông tin xác thực. Trong tình huống cung cấp đúng thông tin xác thực, log Windows sẽ chứa thêm giá trị SubStatus 0xC0000072, cho biết nguyên nhân thất bại.
 
-Di chuyển xuống cuối section này và nhấp vào Click here to spawn the target system! (nhấp vào đây để khởi tạo hệ thống mục tiêu).
+Trong Kibana, mở thanh điều hướng bên cạnh rồi chọn "Dashboard".
 
-Truy cập http://[Target IP]:5601, nhấp nút bật/tắt điều hướng bên cạnh, rồi nhấp "Dashboard".
-
-Một dashboard được chuẩn bị sẵn sẽ hiển thị. Hãy nhấp biểu tượng “bút chì”/chỉnh sửa.
+Mở dashboard cần bổ sung nội dung trực quan hóa, rồi nhấp biểu tượng “bút chì”/chỉnh sửa.
 
 ![](images/visualization16.png)
 
@@ -665,8 +652,6 @@ Bây giờ, có thể thấy ba cột trong bảng chứa những thông tin sau
 
 Cuối cùng, nhấp "Save and return"; bạn sẽ thấy nội dung trực quan hóa mới được thêm vào dashboard.
 
-Vui lòng chờ 3-5 phút để Kibana sẵn sàng sau khi khởi tạo máy mục tiêu của các câu hỏi bên dưới.
-
 <a id="section-08"></a>
 
 ## Section 8/11 — Ví dụ trực quan hóa SIEM 3: Đăng nhập RDP thành công liên quan đến tài khoản dịch vụ
@@ -679,11 +664,9 @@ Nội dung trực quan hóa sẽ dựa trên Windows event log sau.
 
 4624: Một tài khoản đã đăng nhập thành công
 
-Di chuyển xuống cuối section này và nhấp vào Click here to spawn the target system! (nhấp vào đây để khởi tạo hệ thống mục tiêu).
+Trong Kibana, mở thanh điều hướng bên cạnh rồi chọn "Dashboard".
 
-Truy cập http://[Target IP]:5601, nhấp nút bật/tắt điều hướng bên cạnh, rồi nhấp "Dashboard".
-
-Một dashboard được chuẩn bị sẵn sẽ hiển thị. Hãy nhấp biểu tượng “bút chì”/chỉnh sửa.
+Mở dashboard cần bổ sung nội dung trực quan hóa, rồi nhấp biểu tượng “bút chì”/chỉnh sửa.
 
 ![](images/visualization16.png)
 
@@ -752,8 +735,6 @@ Bây giờ, có thể thấy bốn cột trong bảng chứa những thông tin 
 
 Cuối cùng, nhấp "Save and return"; bạn sẽ thấy nội dung trực quan hóa mới được thêm vào dashboard.
 
-Vui lòng chờ 3-5 phút để Kibana sẵn sàng sau khi khởi tạo máy mục tiêu của các câu hỏi bên dưới.
-
 <a id="section-09"></a>
 
 ## Section 9/11 — Ví dụ trực quan hóa SIEM 4: Người dùng được thêm vào hoặc xóa khỏi nhóm cục bộ (Trong khung thời gian cụ thể)
@@ -765,11 +746,9 @@ Nội dung trực quan hóa sẽ dựa trên các Windows event log sau.
 - 4732: Một thành viên đã được thêm vào nhóm cục bộ có chức năng bảo mật.
 - 4733: Một thành viên đã bị xóa khỏi nhóm cục bộ có chức năng bảo mật.
 
-Di chuyển xuống cuối section này và nhấp vào Click here to spawn the target system! (nhấp vào đây để khởi tạo hệ thống mục tiêu).
+Trong Kibana, mở thanh điều hướng bên cạnh rồi chọn "Dashboard".
 
-Truy cập http://[Target IP]:5601, nhấp nút bật/tắt điều hướng bên cạnh, rồi nhấp "Dashboard".
-
-Một dashboard được chuẩn bị sẵn sẽ hiển thị. Hãy nhấp biểu tượng “bút chì”/chỉnh sửa.
+Mở dashboard cần bổ sung nội dung trực quan hóa, rồi nhấp biểu tượng “bút chì”/chỉnh sửa.
 
 ![](images/visualization16.png)
 
@@ -832,8 +811,6 @@ Có thể thu hẹp phạm vi của nội dung trực quan hóa như sau.
 ![](images/visualization50.png)
 
 Cuối cùng, nhấp nút "Save" để lưu lại tất cả chỉnh sửa.
-
-Vui lòng chờ 3-5 phút để Kibana sẵn sàng sau khi khởi tạo máy mục tiêu của các câu hỏi bên dưới.
 
 Lưu ý: Vì Elasticsearch sử dụng bucket để tổng hợp dữ liệu (khoảng thời gian, v.v.) thành nhóm, chúng ta phải luôn dùng khoảng thời gian tuyệt đối khi tạo nội dung trực quan hóa. Nếu không xét điều này, bucket sẽ hiển thị khoảng theo tuần thay vì theo ngày. Ví dụ, một khoảng thời gian tuyệt đối có thể là từ ngày 1 tháng 1 đến ngày 31 tháng 1 năm 2023.
 
@@ -934,55 +911,3 @@ Xác định các điều kiện chuyển cấp dựa trên chính sách của t
 - Thông báo cho các bên liên quan, cung cấp bản tổng hợp về hành động đã thực hiện, kết quả và bài học rút ra.
 
 Thường xuyên xem xét và cập nhật quy trình, bảo đảm phù hợp với chính sách, thủ tục và hướng dẫn của tổ chức. Điều chỉnh quy trình để xử lý những mối đe dọa mới nổi và nhu cầu thay đổi.
-
-<a id="section-11"></a>
-
-## Section 11/11 — Đánh giá kỹ năng
-
-### Bài tập xem xét dashboard và tư duy phản biện
-
-Chúc mừng,
-
-Bạn đã được Eagle tuyển dụng làm nhà phân tích SOC Tier 1. Hôm qua là ngày làm thủ tục gia nhập công ty, và hôm nay bạn sẽ được làm quen với SOC. Ngày làm việc bắt đầu bằng cuộc gặp với một nhà phân tích cấp cao, người sẽ cung cấp hiểu biết về môi trường; sau đó, bạn được kỳ vọng bắt đầu giám sát cảnh báo và sự kiện bảo mật trên các dashboard SOC do chúng ta tự xây dựng.
-
-Dưới đây là ghi chú của bạn sau khi gặp nhà phân tích cấp cao và được cung cấp thông tin về môi trường:
-
-- Tổ chức đã chuyển toàn bộ hoạt động hosting lên đám mây; mạng DMZ cũ đã đóng, vì vậy không còn máy chủ nào ở đó.
-- Đội vận hành CNTT (các quản trị viên CNTT nòng cốt) gồm bốn người. Họ là những người duy nhất có đặc quyền cao trong môi trường.
-- Đội vận hành CNTT thường có xu hướng sử dụng các tài khoản administrator mặc định, ngay cả khi đã được yêu cầu không làm vậy.
-- Tất cả thiết bị đầu cuối được tăng cường bảo mật theo baseline của CIS. Danh sách cho phép được triển khai ở mức hạn chế.
-- Bộ phận bảo mật CNTT đã tạo một privileged admin workstation (PAW — máy trạm quản trị đặc quyền) và yêu cầu mọi hoạt động quản trị phải được thực hiện trên máy này.
-- Môi trường Linux chủ yếu là những máy chủ “còn sót lại” từ trước đây, có rất ít hoặc gần như không có hoạt động trong một ngày bình thường. Tài khoản root không được sử dụng; do các phát hiện trong kiểm toán, tài khoản này đã bị chặn kết nối từ xa, và người dùng cần những quyền đó phải nâng quyền qua lệnh sudo.
-- Có quy ước đặt tên và chúng được tuân thủ nghiêm ngặt; ví dụ, tài khoản dịch vụ chứa '-svc' trong tên. Tài khoản dịch vụ được tạo với mật khẩu dài, phức tạp và thực hiện một nhiệm vụ rất cụ thể (nhiều khả năng là chạy dịch vụ cục bộ trên máy).
-
-Nếu đang có một phiên máy mục tiêu chạy sẵn, hãy đặt lại bằng cách nhấp biểu tượng "Reset Target". Điều này bảo đảm bạn lấy lại quyền truy cập dashboard được cấu hình sẵn, có thể đã bị bạn xóa trong những section liên quan đến trực quan hóa SIEM.
-
-Bây giờ, bạn có thể ngồi vào vị trí và bắt đầu giám sát. Truy cập http://[Target IP]:5601, nhấp nút bật/tắt điều hướng bên cạnh, rồi nhấp "Dashboard". Xem xét dashboard SOC-Alerts.
-
-#### Nội dung trực quan hóa 1: Đăng nhập thất bại (Tất cả người dùng)
-
-Nội dung trực quan hóa như vậy có thể làm lộ ra những cuộc tấn công brute force tiềm ẩn. Điều quan trọng là xác định một người dùng riêng lẻ có nhiều lần đăng nhập thất bại, hoặc nhiều người dùng kết nối đến (hay từ) cùng một thiết bị đầu cuối. Tuy nhiên, dữ liệu hiện tại không cho thấy tình huống nào như vậy. Dù thế, có thể nhận thấy một điểm bất thường. Gợi ý: Nó liên quan đến tài khoản "sql-svc1".
-
-#### Nội dung trực quan hóa 2: Đăng nhập thất bại (Người dùng bị vô hiệu hóa)
-
-Có vẻ có một sự việc mà người dùng "Anni" đã cố xác thực dù tài khoản bị vô hiệu hóa.
-
-#### Nội dung trực quan hóa 3: Đăng nhập thất bại (Chỉ người dùng quản trị)
-
-Gợi ý: Kiểm tra xem tất cả sự kiện có xảy ra trên Privileged Access Workstations (PAW — máy trạm truy cập đặc quyền) hoặc Domain Controller hay không.
-
-#### Nội dung trực quan hóa 4: Đăng nhập RDP bằng tài khoản dịch vụ
-
-Các tài khoản dịch vụ trong môi trường này phục vụ một chức năng rất chuyên biệt. Bạn có nhận thấy điều gì đáng nghi không?
-
-#### Nội dung trực quan hóa 5: Người dùng được thêm vào hoặc xóa khỏi nhóm cục bộ
-
-Một quản trị viên đã thêm một cá nhân (chỉ được biểu diễn bằng giá trị SID) vào nhóm "Administrators". Bạn nên chuyển lên nhà phân tích Tier 2/3 hay tham vấn bộ phận vận hành CNTT trước?
-
-#### Nội dung trực quan hóa 6: Đăng nhập quản trị không xuất phát từ PAW
-
-Quản trị viên chỉ nên dùng PAW cho những kết nối từ xa đến máy chủ. Bạn nên chuyển lên nhà phân tích Tier 2/3 hay tham vấn bộ phận vận hành CNTT trước?
-
-#### Nội dung trực quan hóa 7: Đăng nhập SSH
-
-Hãy nhớ rằng tài khoản root thông thường không được sử dụng.

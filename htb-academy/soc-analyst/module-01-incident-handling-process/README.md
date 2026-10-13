@@ -12,7 +12,6 @@
 - [Section 8/11 — Giai đoạn ngăn chặn, loại bỏ và phục hồi](#section-08)
 - [Section 9/11 — Giai đoạn hoạt động sau sự cố](#section-09)
 - [Section 10/11 — Phân tích vụ xâm nhập Insight Nexus](#section-10)
-- [Section 11/11 — Đánh giá kỹ năng](#section-11)
 
 <a id="section-01"></a>
 
@@ -404,8 +403,6 @@ Active Directory có một số con đường leo thang đặc quyền hoặc l�
 
 Chúng ta cần đào tạo người xử lý sự cố và duy trì sự tham gia tích cực của họ. Điều này là không phải bàn cãi, và nơi tốt nhất để làm việc đó là ngay trong môi trường của tổ chức. Về bản chất, diễn tập purple team là các cuộc đánh giá bảo mật do red team thực hiện, trong đó red team thông báo liên tục hoặc sau cùng cho blue team về các hành động, phát hiện, những thiếu sót về khả năng quan sát hoặc bảo mật, v.v. Các cuộc diễn tập này sẽ giúp nhận diện lỗ hổng trong tổ chức, đồng thời kiểm tra năng lực phòng thủ của blue team về ghi log, giám sát, phát hiện và khả năng ứng phó. Nếu một mối đe dọa không bị phát hiện, đó là cơ hội để cải thiện. Với những mối đe dọa đã bị phát hiện, blue team có thể kiểm tra các playbook và quy trình xử lý sự cố để bảo đảm chúng vững chắc và đạt được kết quả mong đợi.
 
-Để thực hành các bài tập liên quan đến purple team, bạn có thể tham khảo những module như Intro to Academy's Purple Modules và Detection & OpSec Cyber Range, cung cấp môi trường để thực hiện diễn tập purple team.
-
 <a id="section-06"></a>
 
 ## Section 6/11 — Giai đoạn phát hiện và phân tích (Phần 1)
@@ -458,8 +455,6 @@ Như có thể suy ra, dòng thời gian chủ yếu tập trung vào hành vi c
 Chúng ta cũng có thể xem một cảnh báo liên quan đến bản ghi sự kiện này trong nền tảng quản lý case TheHive.
 
 ![](images/hivealert1.png)
-
-Hãy di chuyển xuống cuối section này và nhấp vào "Click here to spawn the target system!" (nhấp vào đây để khởi tạo hệ thống mục tiêu). Sau đó, mở trang web TheHive tại "Target IP:9000", trên cổng 9000, sử dụng thông tin xác thực được cung cấp để xem các cảnh báo.
 
 Chúng ta có thể tự nhận xử lý cảnh báo, tạo case, làm việc trên đó, thêm chi tiết về sự cố vào case; sau khi điều tra hoàn tất, có thể ghi lại toàn bộ phát hiện và bài học trong case rồi đóng nó.
 
@@ -624,8 +619,6 @@ Trong kết quả phát hiện này, AI hỗ trợ bằng cách xem xét nhiều
 ### Tổng kết
 
 Trong hai section vừa qua, chúng ta đã đi qua các bước ban đầu của giai đoạn phát hiện và phân tích, quản lý những quy trình quan trọng và ghi chép từng bước cần thiết trong một sự cố. Duy trì sự tập trung và cách làm việc có tổ chức là một trong những điều cốt lõi cần giữ để thực hiện đúng giai đoạn này.
-
-Hãy di chuyển xuống cuối section này và nhấp vào "Click here to spawn the target system!" (nhấp vào đây để khởi tạo hệ thống mục tiêu). Sau đó, mở trang web TheHive tại "Target IP:9000", trên cổng 9000, sử dụng thông tin xác thực được cung cấp để xem các cảnh báo.
 
 <a id="section-08"></a>
 
@@ -922,39 +915,3 @@ Những bài học sau đã được rút ra:
 - Nhiều tác nhân đe dọa có thể đồng thời hiện diện trong một môi trường với động cơ khác nhau — một bên hành động theo cơ hội, một bên nhắm mục tiêu rất cụ thể. Điều này làm phức tạp việc ứng phó vì bên phòng thủ có thể đánh giá thấp mức độ nghiêm trọng nếu chỉ nhìn thấy kẻ xâm nhập “ồn ào”.
 - Không tương quan cảnh báo giữa các đội làm chậm việc ngăn chặn, cho các tác nhân tinh vi thêm thời gian để đạt mục tiêu.
 - Giám sát sau sự cố phải bao gồm việc quét tìm các cơ chế duy trì hiện diện, vì xóa tệp đánh dấu của kẻ tấn công không loại bỏ được nguyên nhân gốc rễ.
-
-<a id="section-11"></a>
-
-## Section 11/11 — Đánh giá kỹ năng
-
-Trong bài đánh giá kỹ năng, bạn đóng vai một nhân viên ứng phó sự cố mới vào nghề và cần thực hiện một số nhiệm vụ.
-
-Hãy di chuyển xuống cuối section này và nhấp vào "Click here to spawn the target system!" (nhấp vào đây để khởi tạo hệ thống mục tiêu). Sau đó, mở trang web TheHive tại "Target IP:9000", trên cổng 9000, sử dụng thông tin xác thực được cung cấp để xem các cảnh báo.
-
-### Triage các cảnh báo
-
-TheHive đã được nạp những cảnh báo liên quan đến vụ xâm nhập Insights Nexus. Bạn được yêu cầu triage chúng, bắt đầu bằng:
-
-Nhiệm vụ 1: Tạo một case mới trong TheHive. Tìm tất cả cảnh báo dành riêng cho tình huống xâm nhập Insights Nexus và liên kết các cảnh báo vào case. Bài tập này giúp bạn làm quen với việc xử lý cảnh báo và case trong TheHive.
-
-Nhiệm vụ 2: Thực hiện triage, enrichment và correlation (tương quan) trong TheHive. Trong phần ghi chú của một cảnh báo, bạn có thể thêm thông tin hữu ích để bổ sung ngữ cảnh.
-
-Nhiệm vụ 3: Một trong các cảnh báo liên quan đến Insights Nexus trong TheHive có thông tin ở phần ghi chú. Đầu ra lệnh netstat cho thấy một số kết nối đến các địa chỉ IP bên ngoài. Bạn có thể xác minh phát hiện này.
-
-![](images/ir-netstat.png)
-
-Đầu ra này được thu thập sau khi máy tính gia nhập lại domain sau phục hồi. Tuy nhiên, nó vẫn đang kết nối đến một địa chỉ IP. Nhà phân tích đã thêm thông tin này vào phần bình luận của cảnh báo.
-
-Có thêm một số câu hỏi ở cuối section này.
-
-### Ánh xạ sang Cyber Kill Chain
-
-Một người dùng mở tệp đính kèm, khiến một downloader được thực thi; downloader ghi một tệp .exe vào %AppData%, tạo một khóa registry Run, rồi sau đó nạp VaultCli.dll thông qua một công cụ đáng ngờ, đưa thông tin xác thực ra một IP bên ngoài. Nhiệm vụ của bạn là ánh xạ từng bước của cuộc tấn công vào giai đoạn tương ứng trong kill chain.
-
-- Nhiệm vụ 1: Ánh xạ hoạt động tải tệp, thao tác registry và đưa dữ liệu ra ngoài sang MITRE ATT&CK.
-- Nhiệm vụ 2: Kiểm tra cảnh báo liên quan đến Mimikatz trong TheHive và xác định MITRE Technique ID.
-
-### Điều tra các log đã thu thập
-
-- Nhiệm vụ 1: Ngoài ra, bạn được cung cấp một số tệp event log (tức logs-wazuh.zip). Một trong các nhiệm vụ là giải mã một số lệnh PowerShell và trích xuất IOC từ chúng.
-- Nhiệm vụ 2: Xác định người dùng đã thực thi lệnh PowerShell đáng ngờ.
