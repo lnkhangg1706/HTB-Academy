@@ -2393,6 +2393,8 @@ Hãy dành một chút thời gian quan sát lưu lượng. Chú ý rằng ở �
 
 #### Bộ lọc RDP
 
+![](images/enc-rdp.png)
+
 Ở trạng thái hiện tại, chúng ta không thấy được nhiều, đúng không? Đó là vì mặc định RDP sử dụng TLS để mã hóa dữ liệu, nên chúng ta không thể thấy những gì đã xảy ra trong lưu lượng RDP. Làm sao xác minh nó tồn tại trong tệp này? Một cách là lọc theo cổng thông dụng mà RDP thường sử dụng.
 
 Lọc theo cổng `3389` để xác định có lưu lượng RDP, được mã hóa hoặc không, hay không.
@@ -2419,6 +2421,8 @@ Giờ hãy tiến thêm một bước, dùng khóa đã tìm được để th�
 1. Vào **Edit → Preferences → Protocols → TLS**.
 2. Trên trang TLS, chọn **Edit** bên cạnh **RSA keys list**; một cửa sổ mới sẽ mở ra.
 
+   ![](images/import-ws.png)
+
 Làm theo các bước bên dưới để nhập khóa RSA của server.
 
 #### Nhập khóa RDP
@@ -2434,9 +2438,13 @@ Làm theo các bước bên dưới để nhập khóa RSA của server.
 
 #### Các bước nhập khóa
 
+![](images/import-steps.png)
+
 Khi lọc lại theo RDP, chúng ta sẽ thấy lưu lượng xuất hiện trong phần hiển thị.
 
 #### RDP ở dạng rõ
+
+![](images/rdp-clear.png)
 
 Từ đây, chúng ta có thể phân tích lưu lượng RDP. Giờ có thể theo dõi luồng TCP, xuất những đối tượng có thể tìm thấy và thực hiện các thao tác khác cần thiết cho cuộc điều tra. Cách này hoạt động vì chúng ta đã lấy được khóa RSA dùng để mã hóa phiên RDP. Các bước lấy khóa khá dài, nhưng nói ngắn gọn, nếu lấy được chứng chỉ RDP từ server, OpenSSL có thể trích xuất khóa riêng từ đó.
 
@@ -2463,6 +2471,8 @@ Nếu chú ý gói tin đầu tiên của lần bắt tay ba bước, tức gói
 Khi lọc theo `tcp.port == 3389`, chúng ta thấy một bản ghi có nhãn **Ignored Unknown Record**. Kiểm tra phần ASCII sẽ cho thấy tên người dùng.
 
 #### Người dùng
+
+![](images/rdp-user.png)
 
 </details>
 
