@@ -8,9 +8,15 @@
 - [Section 4/15 — Quy trình phân tích](#section-04)
 - [Section 5/15 — Vận dụng quy trình phân tích](#section-05)
 - [Section 6/15 — Kiến thức cơ bản về Tcpdump](#section-06)
+- [Section 7/15 — Lab kiến thức cơ bản](#section-07)
 - [Section 8/15 — Lọc gói tin bằng Tcpdump](#section-08)
+- [Section 9/15 — Khảo sát lưu lượng mạng bằng bộ lọc thu thập và hiển thị](#section-09)
 - [Section 10/15 — Phân tích bằng Wireshark](#section-10)
+- [Section 11/15 — Làm quen với Wireshark](#section-11)
 - [Section 12/15 — Sử dụng Wireshark nâng cao](#section-12)
+- [Section 13/15 — Packet Inception: Phân tích lưu lượng mạng bằng Wireshark](#section-13)
+- [Section 14/15 — Lab có hướng dẫn: Quy trình phân tích lưu lượng](#section-14)
+- [Section 15/15 — Giải mã các kết nối RDP](#section-15)
 
 <a id="section-01"></a>
 
@@ -76,7 +82,7 @@ Danh sách dưới đây chứa nhiều công cụ và loại thiết bị khác
 
 ### Cú pháp BPF
 
-Nhiều công cụ được đề cập ở trên có cú pháp và lệnh riêng, nhưng cú pháp Berkeley Packet Filter (BPF) là điểm chung giữa chúng. Đây là cú pháp chính mà chúng ta sẽ sử dụng. Về bản chất, BPF là công nghệ cung cấp một giao diện thô để đọc và ghi từ tầng Data-Link (liên kết dữ liệu). Với những đặc điểm đó, chúng ta quan tâm đến BPF vì khả năng lọc và giải mã mà nó cung cấp. Chúng ta sẽ sử dụng cú pháp BPF xuyên suốt module, vì vậy hiểu cơ bản về cách thiết lập một bộ lọc BPF sẽ hữu ích. Để biết thêm về cú pháp BPF, hãy xem tài liệu tham khảo được đề cập trong bản gốc.
+Nhiều công cụ được đề cập ở trên có cú pháp và lệnh riêng, nhưng cú pháp Berkeley Packet Filter (BPF) là điểm chung giữa chúng. Đây là cú pháp chính mà chúng ta sẽ sử dụng. Về bản chất, BPF là công nghệ cung cấp một giao diện thô để đọc và ghi từ tầng Data-Link (liên kết dữ liệu). Với những đặc điểm đó, chúng ta quan tâm đến BPF vì khả năng lọc và giải mã mà nó cung cấp. Chúng ta sẽ sử dụng cú pháp BPF xuyên suốt module, vì vậy hiểu cơ bản về cách thiết lập một bộ lọc BPF sẽ hữu ích. Để biết thêm về cú pháp BPF, hãy xem tài liệu tham khảo này.
 
 ### Thực hiện phân tích lưu lượng mạng
 
@@ -88,7 +94,9 @@ Tối thiểu, để lắng nghe thụ động, chúng ta cần kết nối vào
 
 Phân tích lưu lượng không phải là một lĩnh vực có quy trình chính xác tuyệt đối. NTA có thể rất linh hoạt và không phải một vòng lặp đơn giản. Nó chịu ảnh hưởng lớn từ điều chúng ta đang tìm kiếm — lỗi mạng hay hành vi độc hại — và từ những vị trí mà chúng ta có thể quan sát mạng. Việc phân tích lưu lượng có thể được quy về một số nguyên tắc cơ bản.
 
-![](images/workflow.png)
+#### Quy trình NTA
+
+![Quy trình NTA](images/workflow.png)
 
 #### 1. Thu nạp lưu lượng
 
@@ -124,7 +132,9 @@ Section này giúp ôn tập nhanh kiến thức mạng và cách hoạt động
 
 ### Các mô hình OSI / TCP-IP
 
-![](images/net_models4.png)
+#### Các mô hình mạng
+
+![Các mô hình mạng](images/net_models4.png)
 
 Hình phía trên cho thấy rõ mô hình Open Systems Interconnect (OSI) và mô hình Transmission Control Protocol - Internet Protocol (TCP-IP) được đặt cạnh nhau. Các mô hình là cách biểu diễn bằng hình ảnh về cách xử lý hoạt động giao tiếp giữa các máy tính nối mạng. Hãy dành chút thời gian so sánh hai mô hình:
 
@@ -140,11 +150,15 @@ Khi xem xét hai mô hình này, có thể thấy mô hình OSI được phân c
 
 Trong suốt module này, chúng ta sẽ xem xét nhiều Protocol Data Unit (PDU — đơn vị dữ liệu giao thức) khác nhau, vì vậy cần hiểu chúng được biểu diễn như thế nào cả trên lý thuyết lẫn trên đường truyền. PDU là một gói dữ liệu gồm thông tin điều khiển và dữ liệu được đóng gói từ từng tầng của mô hình OSI. Phần phân tách bên dưới sẽ cho thấy các tầng trong hai mô hình tương ứng với một PDU như thế nào.
 
-![](images/net_models_pdu2.png)
+#### Ví dụ về PDU
+
+![Ví dụ về PDU](images/net_models_pdu2.png)
 
 Khi kiểm tra một PDU, cần ghi nhớ khái niệm encapsulation (đóng gói). Khi dữ liệu đi xuống bộ giao thức, mỗi tầng sẽ bọc dữ liệu của những tầng trước đó trong một lớp vỏ mới; quá trình này được gọi là đóng gói. Lớp vỏ này bổ sung thông tin cần thiết của tầng đó vào header của PDU. Thông tin có thể khác nhau tùy tầng, nhưng bao gồm nội dung do tầng trước mang theo, các cờ hoạt động, những tùy chọn cần thiết để thương lượng giao tiếp, địa chỉ IP nguồn và đích, cổng, cùng các giao thức tầng Transport và Application.
 
-![](images/pdu-wireshark.png)
+#### Phân tích gói tin PDU
+
+![Phân tích gói tin PDU](images/pdu-wireshark.png)
 
 Hình phía trên cho thấy cấu tạo của một PDU đặt cạnh phần phân tách gói tin trong khung Packet Details của Wireshark. Lưu ý rằng phần phân tách trong Wireshark được hiển thị theo thứ tự ngược lại. Wireshark hiển thị PDU theo thứ tự ngược vì đó là thứ tự mà các lớp đóng gói được gỡ bỏ.
 
@@ -156,7 +170,9 @@ Sau khi xem qua những khái niệm cơ bản chi phối hoạt động của m
 
 Mỗi giao diện logic hoặc vật lý gắn với một máy đều có địa chỉ Media Access Control (MAC). Đây là địa chỉ 48 bit, gồm sáu octet, được biểu diễn ở dạng thập lục phân. Trong hình bên dưới, mũi tên màu đỏ chỉ ra một ví dụ về địa chỉ này.
 
-![](images/Addressing.png)
+#### Địa chỉ MAC
+
+![Địa chỉ MAC](images/Addressing.png)
 
 Địa chỉ MAC được sử dụng trong giao tiếp tầng hai giữa các máy — tầng Data-Link hoặc Link tùy theo mô hình đang xét. Cơ chế này hoạt động thông qua giao tiếp giữa các máy trong cùng một broadcast domain (miền quảng bá). Nếu lưu lượng tầng hai cần đi qua một giao diện tầng ba, PDU đó được gửi đến giao diện đầu ra tầng ba và được định tuyến đến đúng mạng. Ở tầng hai, điều này thể hiện như thể PDU được gửi đến địa chỉ của giao diện router; router sẽ xét địa chỉ tầng ba để quyết định gửi nó đi đâu tiếp theo. Sau khi quyết định, router loại bỏ lớp đóng gói tầng hai và thay bằng thông tin mới chỉ ra địa chỉ vật lý tiếp theo trên tuyến đường.
 
@@ -168,7 +184,9 @@ Internet Protocol (IP) được phát triển để chuyển dữ liệu từ m�
 
 Cơ chế địa chỉ hóa phổ biến nhất mà phần lớn mọi người quen thuộc là địa chỉ Internet Protocol phiên bản 4 (IPv4). Địa chỉ IPv4 là phương thức cốt lõi để định tuyến gói tin qua các mạng đến những máy nằm ngoài phạm vi mạng lân cận trực tiếp của chúng ta. Hình bên dưới cho thấy một ví dụ về địa chỉ IPv4 ở vị trí mũi tên màu xanh lá.
 
-![](images/Addressing.png)
+#### Địa chỉ IP
+
+![Địa chỉ IP](images/Addressing.png)
 
 Địa chỉ IPv4 là một số 32 bit, gồm bốn octet, được biểu diễn ở dạng thập phân. Trong ví dụ, chúng ta thấy địa chỉ `192.168.86.243`. Mỗi octet của địa chỉ IP có thể được biểu diễn bằng một số từ 0 đến 255. Khi kiểm tra PDU, chúng ta sẽ thấy địa chỉ IP ở tầng ba (Network) của mô hình OSI và tầng hai (Internet) của mô hình TCP-IP. Chúng ta sẽ không đi sâu vào IPv4 tại đây, nhưng trong phạm vi module này, cần hiểu những địa chỉ đó là gì, chúng có vai trò gì và được sử dụng ở tầng nào.
 
@@ -178,7 +196,9 @@ Sau hơn một thập kỷ sử dụng IPv4, người ta nhận thấy kho đị
 
 IPv6 cung cấp không gian địa chỉ lớn hơn nhiều, có thể sử dụng cho mọi mục đích kết nối mạng. Địa chỉ IPv6 dài 128 bit, gồm 16 octet, được biểu diễn ở dạng thập lục phân. Trong hình bên dưới, mũi tên màu xanh dương chỉ ra một ví dụ về địa chỉ IPv6 đã được rút gọn.
 
-![](images/Addressing.png)
+#### Địa chỉ IPv6
+
+![Địa chỉ IPv6](images/Addressing.png)
 
 Cùng với không gian địa chỉ lớn hơn nhiều, IPv6 cung cấp: khả năng hỗ trợ Multicasting tốt hơn (gửi lưu lượng từ một đến nhiều đích); địa chỉ toàn cục cho từng thiết bị; tính bảo mật ngay trong giao thức dưới dạng IPSec; header gói tin đơn giản hóa giúp xử lý dễ dàng hơn; và khả năng chuyển từ kết nối này sang kết nối khác mà không bị cấp lại địa chỉ.
 
@@ -197,7 +217,9 @@ Khi xem xét từng loại địa chỉ, nên nhớ rằng lưu lượng Unicast
 
 Dù ở trạng thái hiện tại IPv6 mang lại nhiều ưu điểm so với IPv4, việc áp dụng IPv6 vẫn diễn ra chậm.
 
-![](images/ipv6-adoption.png)
+#### Mức độ áp dụng IPv6
+
+![Mức độ áp dụng IPv6](images/ipv6-adoption.png)
 
 Tại thời điểm bài gốc được viết, theo số liệu do Google công bố, tỷ lệ áp dụng trên toàn cầu chỉ khoảng 40%.
 
@@ -241,7 +263,9 @@ Một trong những cách TCP bảo đảm chuyển dữ liệu từ server đ�
 
 Hãy xem nhanh quá trình này trong thực tế để làm quen trước khi nó xuất hiện trong đầu ra gói tin ở phần sau của module.
 
-![](images/three-way-handshake.png)
+#### Bắt tay ba bước TCP
+
+![Bắt tay ba bước TCP](images/three-way-handshake.png)
 
 Khi kiểm tra đầu ra này, có thể thấy quá trình bắt tay bắt đầu ở dòng đầu tiên. Trong thông tin được đánh dấu bằng khung đỏ, cờ SYN ban đầu đã được bật. Nhìn vào các số cổng được gạch chân màu xanh lá, chúng ta thấy hai số `57678` và `80`. Số đầu tiên là cổng cao được chọn ngẫu nhiên mà client đang sử dụng; số thứ hai là cổng thông dụng của HTTP, được server dùng để lắng nghe những kết nối yêu cầu web đi vào. Ở dòng 2, chúng ta thấy server phản hồi client bằng gói `SYN / ACK` gửi đến cùng các cổng đó. Ở dòng 3, client xác nhận gói đồng bộ của server để thiết lập kết nối.
 
@@ -251,7 +275,7 @@ Chúng ta đã thấy cách thiết lập một phiên TCP; bây giờ hãy xem 
 
 #### Kết thúc phiên TCP
 
-![](images/session-teardown.png)
+![Kết thúc phiên TCP](images/session-teardown.png)
 
 Trong hình phía trên, có thể thấy ở cuối đầu ra một nhóm gói tin tương tự quá trình bắt tay ba bước. Đây là cách TCP đóng kết nối một cách có trật tự. Một cờ khác sẽ gặp trong TCP là cờ FIN. Cờ này dùng để báo hiệu rằng việc truyền dữ liệu đã hoàn tất và bên gửi đang yêu cầu chấm dứt kết nối. Client xác nhận đã nhận dữ liệu, sau đó gửi FIN và ACK để bắt đầu kết thúc phiên. Server phản hồi bằng xác nhận FIN và gửi lại FIN của chính nó. Cuối cùng, client xác nhận phiên đã hoàn tất và đóng kết nối. Trước khi phiên chấm dứt, chúng ta sẽ thấy mẫu gói tin:
 
@@ -300,7 +324,7 @@ Dù về nền tảng vẫn là HTTP, HTTPS sử dụng cổng `443` và `8443` 
 
 #### Bắt tay TLS qua HTTPS
 
-![](images/https.png)
+![Bắt tay TLS qua HTTPS](images/https.png)
 
 Trong vài gói tin đầu tiên, có thể thấy client thiết lập phiên đến server qua cổng `443`, được đánh dấu bằng khung xanh dương. Điều này báo cho server rằng client muốn dùng HTTPS làm giao thức giao tiếp của ứng dụng.
 
@@ -329,7 +353,7 @@ FTP có thể hoạt động ở hai chế độ: active (chủ động) hoặc 
 
 #### Ví dụ về lệnh và phản hồi FTP
 
-![](images/ftp-example.png)
+![Ví dụ về lệnh và phản hồi FTP](images/ftp-example.png)
 
 Hình phía trên cho thấy một số ví dụ về yêu cầu được gửi qua kênh lệnh FTP — các mũi tên màu xanh lá — và phản hồi từ FTP server — các mũi tên màu xanh dương. Đây đều là những hoạt động khá thông thường. Hãy xem bảng bên dưới để biết từng lệnh và chức năng của nó.
 
@@ -362,7 +386,7 @@ Giống các ứng dụng khác dùng TCP làm cơ chế truyền tải, SMB th�
 
 #### SMB trên đường truyền
 
-![](images/smb-actions.png)
+![SMB trên đường truyền](images/smb-actions.png)
 
 Nhìn vào hình phía trên, có thể thấy TCP handshake được thực hiện mỗi khi thiết lập phiên, ở các khung màu cam. Khi xem cổng nguồn và đích trong khung xanh dương, cổng `445` đang được sử dụng, cho biết đây là lưu lượng SMB qua TCP. Trong các khung màu xanh lá, trường info cho biết phần nào những gì đang diễn ra trong giao tiếp SMB. Ví dụ này có nhiều lỗi, cho thấy đây là điều cần tìm hiểu sâu hơn. Một hoặc hai lần xác thực thất bại của người dùng là tương đối phổ biến, nhưng một cụm lớn các lỗi lặp lại có thể báo hiệu một cá nhân không được phép đang cố truy cập tài khoản người dùng hoặc dùng thông tin xác thực của họ để di chuyển. Đây là chiến thuật phổ biến của kẻ tấn công: nhắm đến một người dùng đã xác thực, đánh cắp thông tin xác thực rồi sử dụng để thực hiện lateral movement (di chuyển ngang trong mạng), hoặc truy cập những tài nguyên mà thông thường chúng bị từ chối truy cập.
 
@@ -585,7 +609,7 @@ Bảng dưới đây liệt kê những tùy chọn Tcpdump cơ bản có thể 
 
 Để xem danh sách tùy chọn đầy đủ, chúng ta có thể dùng các trang `man`:
 
-**Trang man của Tcpdump**
+##### Trang man của Tcpdump
 
 ```shellsession
 lnkhangg1706@htb[/htb]$ man tcpdump
@@ -735,17 +759,19 @@ Khi sử dụng các tùy chọn, cách làm được khuyến nghị là kết 
 
 Đầu ra của TCPDump có thể hơi choáng ngợp khi mới nhìn vào. Chỉ riêng những tùy chọn cơ bản vừa xem đã cho chúng ta nhiều cách hiển thị khác nhau. Hãy dành ít thời gian phân tích đầu ra đó và giải thích những gì đang thấy. Hình và bảng bên dưới xác định từng trường. Hãy nhớ rằng mức độ chi tiết chúng ta yêu cầu càng cao thì càng nhiều thông tin từ mỗi header được hiển thị.
 
-![](images/breakdown.png)
+#### Phân tích đầu ra Tcpdump trong shell
+
+![Phân tích đầu ra Tcpdump trong shell](images/breakdown.png)
 
 | Trường | Kết quả |
 |---|---|
-| Timestamp | **Màu vàng:** Trường dấu thời gian xuất hiện đầu tiên và có thể cấu hình để hiển thị ngày giờ theo định dạng dễ tiếp nhận. |
-| Protocol | **Màu cam:** Phần này cho biết header của tầng trên là gì. Trong ví dụ, nó hiển thị IP. |
-| Source & Destination IP.Port | **Màu cam:** Hiển thị nguồn và đích của gói tin cùng số cổng dùng để kết nối. Định dạng: `IP.port`, ví dụ `172.16.146.2.21`. |
-| Flags | **Màu xanh lá:** Phần này hiển thị những cờ đang được sử dụng. |
-| Sequence and Acknowledgement Numbers | **Màu đỏ:** Hiển thị số thứ tự và số xác nhận dùng để theo dõi TCP segment. Ví dụ sử dụng các số nhỏ, từ đó có thể suy ra rằng số thứ tự và số xác nhận tương đối đang được hiển thị. |
-| Protocol Options | **Màu xanh dương:** Hiển thị những giá trị TCP được thương lượng giữa client và server, chẳng hạn kích thước cửa sổ, selective acknowledgment (xác nhận có chọn lọc), hệ số mở rộng cửa sổ và các giá trị khác. |
-| Notes / Next Header | **Màu trắng:** Những ghi chú khác do dissector (bộ phân tích giao thức) tìm thấy xuất hiện ở đây. Vì lưu lượng đang xem được đóng gói, chúng ta có thể thấy thêm thông tin header của các giao thức khác. Trong ví dụ, dissector của TCPDump nhận ra lưu lượng FTP bên trong phần đóng gói và hiển thị cho chúng ta. |
+| Dấu thời gian (Timestamp) | **Màu vàng:** Trường dấu thời gian xuất hiện đầu tiên và có thể cấu hình để hiển thị ngày giờ theo định dạng dễ tiếp nhận. |
+| Giao thức (Protocol) | **Màu cam:** Phần này cho biết header của tầng trên là gì. Trong ví dụ, nó hiển thị IP. |
+| IP.cổng nguồn và đích (Source & Destination IP.Port) | **Màu cam:** Hiển thị nguồn và đích của gói tin cùng số cổng dùng để kết nối. Định dạng == `IP.port == 172.16.146.2.21`. |
+| Các cờ (Flags) | **Màu xanh lá:** Phần này hiển thị những cờ đang được sử dụng. |
+| Số thứ tự và số xác nhận (Sequence and Acknowledgement Numbers) | **Màu đỏ:** Hiển thị số thứ tự và số xác nhận dùng để theo dõi TCP segment. Ví dụ sử dụng các số nhỏ, từ đó có thể suy ra rằng số thứ tự và số xác nhận tương đối đang được hiển thị. |
+| Các tùy chọn giao thức (Protocol Options) | **Màu xanh dương:** Hiển thị những giá trị TCP được thương lượng giữa client và server, chẳng hạn kích thước cửa sổ, selective acknowledgment (xác nhận có chọn lọc), hệ số mở rộng cửa sổ và các giá trị khác. |
+| Ghi chú / Header tiếp theo (Notes / Next Header) | **Màu trắng:** Những ghi chú khác do dissector (bộ phân tích giao thức) tìm thấy xuất hiện ở đây. Vì lưu lượng đang xem được đóng gói, chúng ta có thể thấy thêm thông tin header của các giao thức khác. Trong ví dụ, dissector của TCPDump nhận ra lưu lượng FTP bên trong phần đóng gói và hiển thị cho chúng ta. |
 
 Còn nhiều tùy chọn và thông tin khác có thể hiển thị. Thông tin này thay đổi tùy theo mức độ chi tiết được bật. Để hiểu rõ hơn về header IP và những giao thức khác, hãy xem Networking Primer trong section 2 hoặc module Networking Foundations.
 
@@ -787,6 +813,113 @@ reading from file /home/trey/output.pcap, link-type EN10MB (Ethernet), snapshot 
 ```
 
 Lệnh này đọc capture được lưu trong `output.pcap`. Hãy chú ý rằng đầu ra đã trở lại dạng hiển thị cơ bản. Để lấy thông tin chi tiết hơn từ tệp capture, hãy áp dụng lại các tùy chọn của chúng ta.
+
+<a id="section-07"></a>
+
+## Section 7/15 — Lab kiến thức cơ bản
+
+Mục đích của bài lab này là giúp chúng ta tiếp cận tcpdump và có thời gian làm quen với terminal cũng như việc sử dụng công cụ trong terminal. Chúng ta sẽ thực hành những thao tác tcpdump cơ bản như đọc và ghi tệp, sử dụng các tùy chọn cơ bản và xác định vị trí tệp trong terminal. Trong khi hoàn thành các bài lab, chúng ta có thể khám phá và luyện tập những tùy chọn, chức năng khác nhau của tcpdump. Khi đã quen, hãy dành thời gian thử xem mình có thể nhận diện những lưu lượng nào đang xuất hiện trên mạng.
+
+Hãy nhớ rằng kiểu công việc này thường được dùng để kiểm tra kỹ hơn những máy và server cụ thể, tìm hiểu chúng tương tác với những ai. Quy trình này cũng có thể dùng để xác định các backdoor (cửa hậu) hoặc những vụ xâm nhập tiềm tàng khác. Chúng ta có thể giám sát và ghi lại toàn bộ giao tiếp của một server để phân tích các gói tin gửi và nhận. Trong quá trình phân tích, chúng ta dùng nhiều bộ lọc và mẫu khác nhau để lọc ra những gói tin đáng ngờ. Nội dung này sẽ được tìm hiểu trong một section khác.
+
+Là quản trị viên mạng mới của công ty, chúng ta được giao thu thập lưu lượng mạng để hỗ trợ thiết lập baseline và xác minh mạng của công ty. Để thử nghiệm, chúng ta bắt đầu dùng tcpdump thu thập một ít lưu lượng trong broadcast domain (miền quảng bá) cục bộ, bảo đảm thiết bị thu thập đáp ứng được nhiệm vụ. Chúng ta cần bảo đảm các công cụ và thành phần phụ thuộc cần thiết đã được cài đặt, đồng thời kiểm tra khả năng đọc lưu lượng và lưu vào tệp.
+
+> Nếu bạn muốn tiếp cận bài lab theo hướng tự khám phá hơn, tôi đã liệt kê những nhiệm vụ tổng quát cần hoàn thành. Để xem hướng dẫn chi tiết hơn về cách hoàn thành từng bước, hãy xem ô lời giải bên dưới mỗi nhiệm vụ.
+
+### Các nhiệm vụ
+
+#### Nhiệm vụ #1
+
+Xác minh Tcpdump đã được cài đặt trên máy.
+
+Trước khi bắt đầu, hãy bảo đảm đã cài tcpdump. Chúng ta dùng lệnh nào để xác định tcpdump đã được cài trên Linux hay chưa?
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Để xác định tcpdump đã được cài hay chưa, chúng ta có thể dùng lệnh sau trên Linux, hoặc nhấn phím Windows rồi bắt đầu gõ `tcpdump` trên Windows.
+
+```shellsession
+lnkhangg1706@htb[/htb]$ which tcpdump
+```
+
+</details>
+
+#### Nhiệm vụ #2
+
+Bắt đầu thu thập lưu lượng.
+
+Khi đã biết tcpdump được cài đặt, chúng ta sẵn sàng bắt đầu lần thu thập đầu tiên. Nếu chưa chắc có những giao diện nào để lắng nghe, chúng ta có thể dùng một tùy chọn tích hợp để liệt kê tất cả.
+
+Tùy chọn tcpdump nào hiển thị tất cả giao diện có thể lắng nghe?
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Bước một: Liệt kê các giao diện có thể thu thập lưu lượng.
+
+```shellsession
+lnkhangg1706@htb[/htb]$ tcpdump -D
+```
+
+Bước hai: Bắt đầu thu thập.
+
+```shellsession
+lnkhangg1706@htb[/htb]$ tcpdump -i [interface name or #]
+```
+
+</details>
+
+#### Nhiệm vụ #3
+
+Sử dụng các bộ lọc thu thập cơ bản.
+
+Giờ đây chúng ta đã có thể thu thập lưu lượng, hãy thay đổi cách trình bày thông tin. Chúng ta sẽ tăng mức độ chi tiết của đầu ra và hiển thị nội dung ở dạng ASCII và hex. Sau khi hoàn thành nhiệm vụ, hãy thử lại bằng những tùy chọn khác.
+
+Một thử thách khác là tắt phân giải tên và hiển thị số thứ tự tương đối.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+```shellsession
+lnkhangg1706@htb[/htb]$ tcpdump -i [interface name or #] -vX
+```
+
+</details>
+
+#### Nhiệm vụ #4
+
+Lưu capture vào tệp .PCAP.
+
+Giờ đây, cách thu thập và xem đầu ra là do chúng ta lựa chọn. Hãy nhớ rằng sử dụng bộ lọc thu thập sẽ thay đổi dữ liệu nhận được. Hãy lấy bản capture đầy đủ đầu tiên trực tiếp từ đường truyền và lưu vào tệp PCAP. Đây sẽ là một mẫu dùng để thiết lập baseline cho mạng doanh nghiệp.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+```shellsession
+lnkhangg1706@htb[/htb]$ tcpdump -i [interface name or #] -nvw [/path/of/filename.pcap]
+```
+
+</details>
+
+#### Nhiệm vụ #5
+
+Đọc capture từ tệp .PCAP.
+
+Các thành viên trong nhóm đã đưa cho chúng ta một PCAP thu thập khi khảo sát một khu vực khác của doanh nghiệp. Hãy đọc tệp PCAP bằng tcpdump và điều chỉnh cách hiển thị để xác định điều gì đang diễn ra. Chúng ta có thể tắt phân giải tên máy và cổng cho đơn giản, đồng thời bảo đảm mọi số thứ tự và số xác nhận TCP được hiển thị ở dạng tuyệt đối. Trong phạm vi bài lab, hãy dùng tệp PCAP đã tạo ở bước trước cho nhiệm vụ này.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+```shellsession
+lnkhangg1706@htb[/htb]$ tcpdump -nnSXr [file/to/read.pcap]
+```
+
+Các tùy chọn trên không phân giải tên máy hoặc số cổng, sử dụng số thứ tự tuyệt đối và hiển thị nội dung ở dạng hex cùng ASCII khi đọc từ tệp PCAP.
+
+</details>
+
+Khi hoàn thành các nhiệm vụ trên, hãy trả lời những câu hỏi ở cuối section để kiểm tra mức độ hiểu bài.
 
 <a id="section-08"></a>
 
@@ -832,6 +965,8 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 14:50:53.175714 IP 172.16.146.1.domain > 172.16.146.2.35744: 55991 1/0/0 PTR ec2-52-31-199-148.eu-west-1.compute.amazonaws.com. (107) 
 ```
 
+[Dịch chú thích trong code: Cú pháp: `host [IP]` — chỉ định địa chỉ IP của máy.]
+
 Bộ lọc này thường được dùng khi chỉ muốn kiểm tra một máy hoặc server cụ thể. Nhờ đó, chúng ta có thể xác định máy hoặc server đó giao tiếp với ai và theo cách nào. Dựa trên cấu hình mạng, chúng ta sẽ hiểu kết nối đó có hợp lệ hay không. Nếu giao tiếp có vẻ bất thường, có thể dùng những bộ lọc và tùy chọn khác để xem nội dung chi tiết hơn. Ngoài từng máy riêng lẻ, chúng ta còn có thể xác định máy nguồn cũng như máy đích. Chúng ta cũng có thể xác định cả mạng và các cổng của mạng đó.
 
 #### Bộ lọc nguồn/đích
@@ -853,6 +988,8 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 14:53:36.339334 IP 172.16.146.2.48766 > ec2-52-31-199-148.eu-west-1.compute.amazonaws.com.https: Flags [F.], seq 68, ack 66, win 501, options [nop,nop,TS val 221131922 ecr 80899875], length 0
 14:53:36.370791 IP 172.16.146.2.32972 > 172.16.146.1.domain: 3856+ PTR? 1.146.16.172.in-addr.arpa. (43)
 ```
+
+[Dịch chú thích trong code: Cú pháp: `src/dst [host|net|port] [IP|Network Range|Port]` — nguồn/đích, máy/mạng/cổng, địa chỉ IP/dải mạng/cổng.]
 
 Nguồn và đích cho phép chúng ta làm việc với hướng giao tiếp. Ví dụ, trong đầu ra vừa rồi, chúng ta chỉ định máy nguồn là `172.16.146.2`, nên chỉ những gói tin được gửi từ máy này mới được thu thập. Cũng có thể làm như vậy với cổng và dải mạng. Ví dụ sử dụng `src port #` sẽ có dạng như sau:
 
@@ -891,7 +1028,7 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 16:33:14.446955 IP 64.233.177.103.443 > 172.16.146.2.36050: Flags [.], seq 12907:14325, ack 1, win 316, options [nop,nop,TS val 2311579498 ecr 263866084], length 1418
 ```
 
-Bộ lọc giao thức có thể sử dụng tên giao thức thông dụng hoặc số giao thức cho bất kỳ giao thức IP, IPv6 hoặc Ethernet nào. Những ví dụ phổ biến gồm `tcp[6]`, `udp[17]` hoặc `icmp[1]`. Trong các đầu ra bên dưới, chúng ta sử dụng cả tên thông dụng (phía trên) lẫn số giao thức (phía dưới). Có thể thấy chúng tạo ra cùng một đầu ra. Phần lớn trường hợp, hai cách này có thể thay thế cho nhau, nhưng `proto` sẽ hữu ích hơn khi bắt đầu phân tích một phần cụ thể của header IP hoặc header giao thức khác. Điều này sẽ rõ hơn ở phần sau của section, khi chúng ta tìm các cờ TCP. Có thể tham khảo tài nguyên được nhắc đến trong nguồn để xem danh sách số giao thức hữu ích.
+Bộ lọc giao thức có thể sử dụng tên giao thức thông dụng hoặc số giao thức cho bất kỳ giao thức IP, IPv6 hoặc Ethernet nào. Những ví dụ phổ biến gồm `tcp[6]`, `udp[17]` hoặc `icmp[1]`. Trong các đầu ra bên dưới, chúng ta sử dụng cả tên thông dụng (phía trên) lẫn số giao thức (phía dưới). Có thể thấy chúng tạo ra cùng một đầu ra. Phần lớn trường hợp, hai cách này có thể thay thế cho nhau, nhưng `proto` sẽ hữu ích hơn khi bắt đầu phân tích một phần cụ thể của header IP hoặc header giao thức khác. Điều này sẽ rõ hơn ở phần sau của section, khi chúng ta tìm các cờ TCP. Chúng ta có thể xem tài nguyên này để tham khảo danh sách số giao thức hữu ích.
 
 #### Bộ lọc giao thức — Tên thông dụng
 
@@ -903,6 +1040,8 @@ lnkhangg1706@htb[/htb]$ sudo tcpdump -i eth0 udp
 06:17:10.225414 IP 145.253.2.203.domain > dialin-145-254-160-237.pools.arcor-ip.net.3009: 35 4/0/0 CNAME pagead2.google.com., CNAME pagead.google.akadns.net., A 216.239.59.104, A 216.239.59.99 (146)
 ```
 
+[Dịch chú thích trong code: Cú pháp: `[tcp/udp/icmp]`.]
+
 #### Bộ lọc giao thức — Số giao thức
 
 ```shellsession
@@ -912,6 +1051,8 @@ lnkhangg1706@htb[/htb]$ sudo tcpdump -i eth0 proto 17
 06:17:09.864896 IP dialin-145-254-160-237.pools.arcor-ip.net.3009 > 145.253.2.203.domain: 35+ A? pagead2.googlesyndication.com. (47)
 06:17:10.225414 IP 145.253.2.203.domain > dialin-145-254-160-237.pools.arcor-ip.net.3009: 35 4/0/0 CNAME pagead2.google.com., CNAME pagead.google.akadns.net., A 216.239.59.104, A 216.239.59.99 (146)
 ```
+
+[Dịch chú thích trong code: Cú pháp: `proto [protocol number]` — số giao thức.]
 
 Khi dùng bộ lọc `port`, chúng ta nên ghi nhớ mình đang tìm gì và giao thức đó hoạt động ra sao. Một số giao thức tiêu chuẩn như HTTP hoặc HTTPS chỉ dùng các cổng `80` và `443` với giao thức truyền tải TCP. Từ đó, hãy hình dung cổng là một cách đơn giản để thiết lập kết nối, còn những giao thức như TCP và UDP giúp xác định liệu chúng có sử dụng một phương thức đã được thiết lập hay không. Bản thân cổng có thể được dùng cho bất kỳ mục đích gì, nên lọc theo cổng `80` sẽ hiển thị mọi lưu lượng đi qua số cổng đó. Tuy nhiên, nếu muốn thu thập toàn bộ lưu lượng HTTP, sử dụng `tcp port 80` sẽ bảo đảm chúng ta chỉ thấy lưu lượng HTTP.
 
@@ -941,6 +1082,8 @@ lnkhangg1706@htb[/htb]$ sudo tcpdump -i eth0 tcp port 443
 06:17:10.295515 IP dialin-145-254-160-237.pools.arcor-ip.net.3371 > 216.239.59.99.http: Flags [P.], seq 918691368:918692089, ack 778785668, win 8760, length 721: HTTP: GET /pagead/ads?client=ca-pub-2309191948673629&random=1084443430285&lmt=1082467020&format=468x60_as&output=html&url=http%3A%2F%2Fwww.ethereal.com%2Fdownload.html&color_bg=FFFFFF&color_text=333333&color_link=000000&color_url=666633&color_border=666633 HTTP/1.1
 ```
 
+[Dịch chú thích trong code: Cú pháp: `port [port number]` — số cổng.]
+
 Ngoài từng cổng riêng lẻ, chúng ta còn có thể xác định những dải cổng cụ thể để TCPdump lắng nghe. Lắng nghe một dải cổng đặc biệt hữu ích khi thấy lưu lượng mạng từ những cổng không khớp với các dịch vụ đang chạy trên server. Ví dụ, nếu có một web server đang chạy trên các cổng TCP `80` và `443` trong một phân đoạn mạng, rồi đột nhiên xuất hiện lưu lượng đi ra từ cổng TCP `10000` hoặc những cổng khác, thì điều đó rất đáng ngờ.
 
 Bộ lọc `portrange` bên dưới cho phép xem mọi thứ nằm trong dải cổng. Trong ví dụ, chúng ta thấy một ít lưu lượng DNS cùng với một số yêu cầu web HTTP.
@@ -964,6 +1107,8 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 13:10:35.174716 IP 172.16.146.2.55074 > atl26s18-in-f3.1e100.net.http: Flags [P.], seq 1:379, ack 1, win 502, options [nop,nop,TS val 1337520305 ecr 1000152427], length 378: HTTP: POST /gts1o1core HTTP/1.1
 13:10:35.208007 IP atl26s18-in-f3.1e100.net.http > 172.16.146.2.55074: Flags [.], ack 379, win 261, options [nop,nop,TS val 1000152462 ecr 1337520305], length 0
 ```
+
+[Dịch chú thích trong code: Cú pháp: `portrange [portrange 0-65535]` — dải cổng từ 0 đến 65535.]
 
 Tiếp theo, chúng ta tìm những gói tin nhỏ hơn `64` byte. Từ đầu ra sau, có thể thấy trong capture này, những gói đó chủ yếu là SYN, FIN hoặc KeepAlive. Các điều kiện nhỏ hơn và lớn hơn là một nhóm từ bổ nghĩa hữu ích. Ví dụ, giả sử chúng ta muốn thu thập lưu lượng có chứa hoạt động truyền một tệp hoặc một tập hợp tệp. Chúng ta biết những tệp này sẽ lớn hơn lưu lượng thông thường. Để minh họa, có thể dùng `greater 500` (hoặc `'>500'`), chỉ hiển thị các gói tin lớn hơn `500` byte. Cách này loại khỏi phần hiển thị tất cả những gói tin thừa mà chúng ta đã biết là không quan tâm.
 
@@ -996,6 +1141,8 @@ lnkhangg1706@htb[/htb]$ sudo tcpdump -i eth0 less 64
 06:17:37.374452 IP dialin-145-254-160-237.pools.arcor-ip.net.3372 > 65.208.228.223.http: Flags [F.], seq 480, ack 18366, win 9236, length 0
 06:17:37.704928 IP 65.208.228.223.http > dialin-145-254-160-237.pools.arcor-ip.net.3372: Flags [.], ack 481, win 6432, length 0
 ```
+
+[Dịch chú thích trong code: Cú pháp: `less/greater [size in bytes]` — nhỏ hơn/lớn hơn, kích thước tính bằng byte.]
 
 Trên đây là một ví dụ rõ ràng về việc sử dụng `less`. Chúng ta có thể dùng từ bổ nghĩa `greater 500` để chỉ hiển thị các gói tin từ `500` byte trở lên. Kết quả trả về có một phản hồi đặc biệt trong phần ASCII. Chúng ta có thể nhận ra điều gì đã xảy ra ở đây không?
 
@@ -1032,6 +1179,8 @@ lnkhangg1706@htb[/htb]$ sudo tcpdump -i eth0 host 192.168.0.1 and port 23
 21:12:38.391363 IP 192.168.0.2.1550 > 192.168.0.1.telnet: Flags [P.], seq 1:28, ack 1, win 32120, options [nop,nop,TS val 10233636 ecr 2467372], length 27 [telnet DO SUPPRESS GO AHEAD, WILL TERMINAL TYPE, WILL NAWS, WILL TSPEED, WILL LFLOW, WILL LINEMODE, WILL NEW-ENVIRON, DO STATUS, WILL XDISPLOC]
 21:12:38.537538 IP 192.168.0.1.telnet > 192.168.0.2.1550: Flags [P.], seq 1:4, ack 28, win 17349, options [nop,nop,TS val 2467372 ecr 10233636], length 3 [telnet DO AUTHENTICATION]
 ```
+
+[Dịch chú thích trong code: Cú pháp: `and [requirement]` — và điều kiện.]
 
 Những từ bổ nghĩa khác, `OR` và `NOT`, cho phép chỉ định nhiều điều kiện hoặc phủ định một điều gì đó. Hãy thử chúng một chút. Chúng ta nhận thấy gì trong đầu ra này?
 
@@ -1089,6 +1238,8 @@ reading from file sus.pcap, link-type EN10MB (Ethernet), snapshot length 262144
 14:54:10.697834 IP dns.google > 172.16.146.2: ICMP echo reply, id 51661, seq 28, length 64
 ```
 
+[Dịch chú thích trong code: Cú pháp: `or/|| [requirement]` — hoặc điều kiện.]
+
 Lưu lượng giờ đây hơi khác. Đó là vì nhiều gói tin khớp điều kiện ICMP, còn một số khớp điều kiện host. Vì vậy, trong đầu ra này, chúng ta thấy một ít lưu lượng ARP và ICMP. Bộ lọc hoạt động vì `172.16.146.2` khớp điều kiện còn lại và xuất hiện với vai trò máy ở trường nguồn hoặc đích. Vậy điều gì xảy ra nếu dùng từ bổ nghĩa `NOT` (hoặc `!`)?
 
 #### Bộ lọc NOT
@@ -1112,6 +1263,8 @@ lnkhangg1706@htb[/htb]$ sudo tcpdump -r sus.pcap not icmp
 14:54:16.670536 IP ec2-52-211-164-46.eu-west-1.compute.amazonaws.com.https > 172.16.146.2.55592: Flags [P.], seq 1:34, ack 37, win 114, options [nop,nop,TS val 12294021 ecr 713252991], length 33
 14:54:16.670559 IP 172.16.146.2.55592 > ec2-52-211-164-46.eu-west-1.compute.amazonaws.com.https: Flags [.], ack 34, win 501, options [nop,nop,TS val 713253120 ecr 12294021], length 0
 ```
+
+[Dịch chú thích trong code: Cú pháp: `not/! [requirement]` — phủ định điều kiện.]
 
 Đầu ra giờ đã khác nhiều. Chúng ta chỉ thấy một ít lưu lượng ARP, sau đó là lưu lượng HTTPS mà trước đây chưa thấy. Đó là vì chúng ta đã dùng `not icmp` để loại mọi lưu lượng ICMP khỏi phần hiển thị.
 
@@ -1211,11 +1364,186 @@ TCPDump có thể là công cụ mạnh mẽ nếu chúng ta hiểu hệ thống
 
 | Liên kết | Mô tả |
 |---|---|
-| IP Protocol | RFC 791 mô tả IP và chức năng của giao thức này. |
-| ICMP Protocol | RFC 792 mô tả ICMP và chức năng của giao thức này. |
-| TCP Protocol | RFC 793 mô tả giao thức TCP và cách hoạt động. |
-| UDP Protocol | RFC 768 mô tả UDP và cách hoạt động. |
-| RFC Quick Links | Bài viết Wikipedia này chứa một danh sách lớn các giao thức, kèm RFC giải thích cách triển khai từng giao thức. |
+| Giao thức IP | RFC 791 mô tả IP và chức năng của giao thức này. |
+| Giao thức ICMP | RFC 792 mô tả ICMP và chức năng của giao thức này. |
+| Giao thức TCP | RFC 793 mô tả giao thức TCP và cách hoạt động. |
+| Giao thức UDP | RFC 768 mô tả UDP và cách hoạt động. |
+| Các liên kết nhanh tới RFC | Bài viết Wikipedia này chứa một danh sách lớn các giao thức, kèm RFC giải thích cách triển khai từng giao thức. |
+
+<a id="section-09"></a>
+
+## Section 9/15 — Khảo sát lưu lượng mạng bằng bộ lọc thu thập và hiển thị
+
+Bài lab này giúp chúng ta làm quen với việc khảo sát lưu lượng mạng và thực hành áp dụng bộ lọc gói tin. Chúng ta sẽ sử dụng các bộ lọc như máy, cổng, giao thức và nhiều loại khác để thay đổi cách hiển thị trong khi phân tích một tệp `.PCAP`.
+
+Sau khi chứng minh được khả năng thu thập lưu lượng mạng cho công ty, chúng ta được ban quản lý giao phân tích nhanh lưu lượng mà nhóm đã thu thập khi khảo sát mạng. Mục tiêu là xác định những server nào đang trả lời yêu cầu DNS và HTTP/S trong mạng cục bộ.
+
+> Nếu bạn muốn tiếp cận bài lab theo hướng tự khám phá hơn, tôi đã liệt kê những nhiệm vụ tổng quát cần hoàn thành. Để xem hướng dẫn chi tiết hơn về cách hoàn thành từng bước, hãy xem ô lời giải bên dưới mỗi nhiệm vụ.
+
+### Các nhiệm vụ
+
+Sử dụng `TCPDump-lab-2.zip` trong phần tài nguyên tùy chọn và thực hiện bài lab tốt nhất có thể. Mục tiêu không phải là tìm được mọi thứ ngay trong lần đầu tiên. Điều quan trọng nhất là hiểu các khái niệm. Khi lặp lại những thao tác này nhiều lần, chúng sẽ trở nên dễ dàng hơn.
+
+#### Nhiệm vụ #1
+
+Đọc capture từ tệp mà không áp dụng bộ lọc.
+
+Để bắt đầu, hãy kiểm tra pcap này khi chưa áp dụng bộ lọc nào.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+```shellsession
+lnkhangg1706@htb[/htb]$ tcpdump -r (file.pcap)
+```
+
+</details>
+
+#### Nhiệm vụ #2
+
+Xác định các loại lưu lượng quan sát được.
+
+Ghi lại những loại lưu lượng có thể thấy: các cổng được sử dụng, giao thức và mọi thông tin khác mà bạn cho là liên quan. Chúng ta có thể dùng những bộ lọc nào để làm nhiệm vụ này dễ hơn?
+
+- Chúng ta thấy loại lưu lượng nào?
+- Các giao thức phổ biến:
+- Các cổng được sử dụng:
+
+<details>
+<summary>Nhấp để xem các đáp án</summary>
+
+Chúng ta thấy loại lưu lượng nào?
+
+- Các giao thức phổ biến: Chúng ta sẽ nhận thấy nhiều lưu lượng DNS, HTTP và HTTPS.
+- Các cổng được sử dụng: `53 80 443`.
+
+</details>
+
+#### Nhiệm vụ #3
+
+Xác định các cuộc hội thoại.
+
+Chúng ta đã xem những đặc điểm cơ bản của lưu lượng này; giờ hãy xác định xem có nhận ra mẫu nào trong lưu lượng hay không.
+
+- Bạn có nhận thấy những kết nối thường gặp giữa một server và một máy không? Nếu có, đó là những máy nào?
+- Số cổng client và server được sử dụng trong lần bắt tay ba bước TCP đầy đủ đầu tiên là gì?
+- Những máy nào là server trong các cuộc hội thoại này? Làm sao biết được?
+- Những máy nào nhận dữ liệu?
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Để việc này dễ hơn, bật số thứ tự tuyệt đối bằng `-S` sẽ rất hữu ích khi xác định các cuộc hội thoại.
+
+Chúng ta cũng có thể kiểm tra những máy tham gia. Server thường giao tiếp qua số cổng thông dụng được gán cho giao thức, chẳng hạn `80` cho HTTP, `443` cho HTTPS. Máy hoặc bên nhận trong cuộc hội thoại thường dùng một số cổng cao ngẫu nhiên.
+
+</details>
+
+#### Nhiệm vụ #4
+
+Diễn giải capture chuyên sâu.
+
+Sau khi đã phần nào quen với tệp pcap, hãy tiến hành phân tích. Sử dụng bất kỳ cú pháp cần thiết nào để trả lời các câu hỏi bên dưới.
+
+- Timestamp của cuộc hội thoại được thiết lập đầu tiên trong tệp pcap là gì?
+- Địa chỉ IP của `apache.org` trong các phản hồi từ DNS server là gì?
+- Giao thức nào được dùng trong cuộc hội thoại đầu tiên đó? Cho biết tên/số giao thức.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Để xác định đúng timestamp: đọc tệp bằng `-r`, sau đó kiểm tra các cuộc hội thoại. Tìm cuộc hội thoại được thiết lập đầu tiên, với lần bắt tay TCP đầy đủ `Syn / SYN-ACK / ACK`, rồi xem trường đầu tiên trong đầu ra để tìm timestamp.
+
+Để tìm IP của máy `( )`, chúng ta có thể lọc lưu lượng để chỉ xem các cuộc hội thoại xuất phát từ máy đó bằng `src 'name-of-host'`, rồi tắt phân giải tên bằng `-n`.
+
+Để xác định giao thức được sử dụng trong cuộc hội thoại đầu tiên, hãy tìm số cổng thông dụng khi đã tắt phân giải tên máy và tên cổng bằng `-nn`; hoặc bỏ `-nn` để đầu ra cho biết tên giao thức.
+
+</details>
+
+#### Nhiệm vụ #5
+
+Lọc bỏ lưu lượng.
+
+Đã đến lúc loại bớt dữ liệu. Nạp lại tệp pcap và lọc bỏ mọi lưu lượng không phải DNS. Bạn thấy gì?
+
+- DNS server của phân đoạn mạng này là máy nào?
+- Những tên miền nào được yêu cầu trong tệp pcap?
+- Có thể thấy những loại bản ghi DNS nào?
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Để loại bỏ mọi thứ không phải DNS, chúng ta có thể dùng:
+
+```shellsession
+lnkhangg1706@htb[/htb]$ sudo tcpdump -r (file.pcap) udp and port 53
+```
+
+Hãy nhớ DNS sử dụng cả UDP và TCP cho những chức năng khác nhau. Điều đó có nghĩa chúng ta có thể phải lọc cả hai để bảo đảm không bỏ sót gì.
+
+Nếu dùng tùy chọn `-X`, chúng ta có đầu ra hex và ASCII để xem những tên ở dạng văn bản rõ trong đầu ra.
+
+Hiểu yêu cầu và phản hồi của giao thức DNS sẽ giúp xác định loại bản ghi đang được yêu cầu. Trường thông tin riêng của giao thức thường chứa câu trả lời.
+
+</details>
+
+Giờ đây, khi chỉ còn thấy lưu lượng DNS và đã hiểu rõ hơn cách gói tin được hiển thị, hãy thử trả lời những câu hỏi sau về phân giải tên trong doanh nghiệp:
+
+- Máy nào yêu cầu bản ghi A cho `apache.org`? Cho biết tên máy hoặc IP.
+- Bản ghi A cung cấp thông tin gì?
+- DNS server trả lời trong pcap là máy nào? Cho biết tên máy hoặc IP.
+
+#### Nhiệm vụ #6
+
+Lọc lưu lượng TCP.
+
+Sau khi đã xác định rõ DNS server, hãy tìm những web server hiện diện. Lọc phần hiển thị để chỉ thấy lưu lượng liên quan đến HTTP hoặc HTTPS.
+
+- Những trang web nào được yêu cầu?
+- Những phương thức yêu cầu HTTP phổ biến nhất trong PCAP này là gì?
+- Phản hồi HTTP phổ biến nhất trong PCAP này là gì?
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Lọc theo cổng `80` OR `443` là một khởi đầu phù hợp. Bạn cũng có thể lọc theo tên giao thức HTTP OR HTTPS.
+
+Hãy nhớ cổng mang tính quy ước định hướng. Chúng ta có thể chạy web server trên bất kỳ cổng mở nào có thể được gán, chẳng hạn `8080` hoặc `8001`.
+
+</details>
+
+#### Nhiệm vụ #7
+
+Xác định những gì có thể biết về server trong cuộc hội thoại đầu tiên.
+
+Hãy xem kỹ hơn. Có thể xác định được gì về web server trong cuộc hội thoại đầu tiên? Có điều gì nổi bật không?
+
+Để nhìn rõ hơn, hãy bảo đảm phần hiển thị pcap có cả đầu ra hex và ASCII.
+
+Chúng ta có thể xác định ứng dụng nào đang vận hành web server không?
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Web server thường đưa những thông tin liên quan như hệ điều hành hoặc tên web server vào các phản hồi POST. Bạn cũng có thể xác định dịch vụ nào đang vận hành web server dựa trên những phản hồi đó. Thực hiện nhiệm vụ này bằng tcpdump hơi khó vì phải xem phần ASCII của các phản hồi HTTP. Trong những section sau, khi chuyển sang Wireshark, việc này sẽ dễ hơn nhiều.
+
+</details>
+
+### Tổng kết
+
+Qua bài lab này, chúng ta mở rộng kiến thức khi dùng TCPDump để phân tích lưu lượng PCAP. Chúng ta đã học cách sử dụng hiệu quả bộ lọc thu thập và hiển thị, phân tích lưu lượng để xác định các giao thức đang hoạt động trong môi trường, thậm chí thu được một số thông tin quan trọng về các phân đoạn mạng doanh nghiệp, DNS và web server. Hãy tiếp tục tự khám phá để xem có thể đi sâu đến đâu. Bạn có thể thu thập lưu lượng trong mạng gia đình và trả lời những câu hỏi tương tự không?
+
+### Mẹo phân tích
+
+Dưới đây là danh sách câu hỏi chúng ta có thể tự đặt ra trong quá trình phân tích để giữ đúng hướng:
+
+- Bạn thấy loại lưu lượng nào: giao thức, cổng, v.v.?
+- Có nhiều hơn một cuộc hội thoại không? Có bao nhiêu?
+- Có bao nhiêu máy khác nhau?
+- Timestamp của cuộc hội thoại đầu tiên trong pcap, xét lưu lượng TCP, là gì?
+- Có thể lọc bỏ lưu lượng nào để phần hiển thị gọn hơn?
+- Những máy nào là server trong PCAP, trả lời trên các cổng thông dụng như `53`, `80`, v.v.?
+- Những bản ghi nào được yêu cầu hoặc những phương thức nào được dùng, chẳng hạn GET, POST, bản ghi DNS A, v.v.?
 
 <a id="section-10"></a>
 
@@ -1256,15 +1584,15 @@ Wireshark có những yêu cầu sử dụng sau:
 - Có các gói nhị phân cho phần lớn bản phân phối Unix và Linux.
 - Để kiểm tra gói phần mềm có tồn tại trên máy hay không, dùng lệnh sau:
 
-**Xác định vị trí Wireshark**
+#### Xác định vị trí Wireshark
 
 ```shellsession
 lnkhangg1706@htb[/htb]$ which wireshark
 ```
 
-Nếu chưa có gói phần mềm, chúng ta có thể cài đặt bằng lệnh dưới đây. Thông thường, có thể tìm thấy công cụ tại `/usr/sbin/wireshark`.
+Nếu chưa có gói phần mềm (thường có thể tìm thấy tại `/usr/sbin/wireshark`), bạn có thể cài đặt bằng:
 
-**Cài đặt Wireshark trên Linux**
+#### Cài đặt Wireshark trên Linux
 
 ```shellsession
 lnkhangg1706@htb[/htb]$ sudo apt install wireshark 
@@ -1292,7 +1620,7 @@ Cả hai lựa chọn đều có ưu điểm riêng. TShark là công cụ dành
 
 Để xem danh sách đầy đủ các tùy chọn có thể sử dụng:
 
-**Trợ giúp TShark**
+#### Trợ giúp TShark
 
 ```shellsession
 lnkhangg1706@htb[/htb]$ tshark -h
@@ -1371,13 +1699,17 @@ Capturing on 'eth0'
 
 Termshark là ứng dụng có Text-based User Interface (TUI — giao diện người dùng dạng văn bản), cung cấp giao diện tương tự Wireshark ngay trong cửa sổ terminal.
 
-*Termshark.*
+#### Termshark
+
+![](images/termshark.png)
 
 Có thể tìm thấy Termshark tại trang Termshark. Chúng ta có thể biên dịch từ mã nguồn bằng cách clone repo, hoặc tải một trong những bản phát hành ổn định hiện có từ [các bản phát hành Termshark](https://github.com/gcla/termshark/releases), giải nén tệp và bắt đầu sử dụng.
 
 Để được trợ giúp về cách điều hướng trong TUI này, hãy xem hình bên dưới.
 
-*Trợ giúp Termshark.*
+#### Trợ giúp Termshark
+
+![](images/termshark-help.png)
 
 Để khởi động Termshark, sử dụng những chuỗi lệnh tương tự TShark hoặc tcpdump. Chúng ta có thể chỉ định giao diện cần thu thập lưu lượng, bộ lọc và các thiết lập khác từ terminal. Cửa sổ Termshark sẽ không mở cho đến khi phát hiện lưu lượng khớp bộ lọc thu thập. Vì vậy, nếu chưa có gì xảy ra, hãy chờ một chút.
 
@@ -1385,7 +1717,9 @@ Có thể tìm thấy Termshark tại trang Termshark. Chúng ta có thể biên
 
 Sau khi dành thời gian học cách thu thập gói tin từ dòng lệnh, hãy chuyển sang Wireshark. Chúng ta sẽ dành vài phút kiểm tra những gì xuất hiện trong đầu ra bên dưới. Hãy phân tích giao diện GUI này của Wireshark.
 
-*GUI của Wireshark.*
+#### GUI của Wireshark
+
+![](images/wireshark-interface.png)
 
 #### Ba khung chính — Xem hình phía trên
 
@@ -1418,13 +1752,13 @@ Mỗi dòng đầu ra chứa offset dữ liệu, mười sáu byte ở dạng th
 
 Khi nhìn giao diện Wireshark, chúng ta sẽ thấy một số khu vực tùy chọn và nút chọn khác nhau. Đây là những điểm điều khiển cho phép thay đổi giao diện và cách xem các gói tin trong capture hiện tại. Xem hình bên dưới.
 
-*Menu Wireshark.*
+#### Menu Wireshark
 
 ### Thực hiện lần thu thập đầu tiên trong Wireshark
 
 Bắt đầu thu thập bằng Wireshark khá đơn giản. Ảnh GIF bên dưới minh họa các bước.
 
-*Các bước bắt đầu thu thập.*
+#### Các bước bắt đầu thu thập
 
 Hãy nhớ rằng mỗi khi thay đổi tùy chọn thu thập, Wireshark sẽ khởi động lại quá trình ghi nhận lưu lượng. Tương tự TCPDump, Wireshark có các tùy chọn bộ lọc thu thập và bộ lọc hiển thị để sử dụng.
 
@@ -1469,13 +1803,13 @@ Dưới đây là bảng những bộ lọc thu thập phổ biến, hữu ích 
 
 Trước khi áp dụng capture filter, hãy xem những bộ lọc tích hợp sẵn. Để làm vậy: nhấp **Capture** ở đầu cửa sổ Wireshark → chọn **Capture Filters** trong menu thả xuống.
 
-*Danh sách bộ lọc.*
+#### Danh sách bộ lọc
 
 Từ đây, chúng ta có thể sửa các bộ lọc hiện có hoặc thêm bộ lọc riêng.
 
 Để áp dụng bộ lọc vào capture: nhấp **Capture** ở đầu cửa sổ Wireshark → chọn **Options** trong menu thả xuống → trong cửa sổ mới, chọn menu thả xuống **Capture filter for selected interfaces** hoặc nhập bộ lọc muốn dùng. Vị trí này nằm dưới mũi tên đỏ trong hình bên dưới.
 
-*Áp dụng capture filter.*
+#### Áp dụng capture filter
 
 ### Display filter
 
@@ -1499,11 +1833,86 @@ Hãy nhớ rằng khi dùng Display filter, lưu lượng được xử lý đ�
 
 Áp dụng display filter còn dễ hơn capture filter. Từ cửa sổ capture chính của Wireshark, chỉ cần chọn biểu tượng dấu trang trên thanh công cụ → chọn một tùy chọn trong menu thả xuống. Hoặc đặt con trỏ vào ô văn bản → nhập bộ lọc muốn dùng. Nếu ô chuyển sang màu xanh lá, bộ lọc hợp lệ, như hình bên dưới.
 
-*Áp dụng display filter.*
+#### Áp dụng display filter
 
 Khi dùng capture filter và display filter, hãy nhớ rằng những gì chúng ta chỉ định được hiểu theo nghĩa đen. Ví dụ, lọc lưu lượng cổng `80` không giống lọc HTTP. Hãy coi cổng và giao thức là những quy ước định hướng hơn là quy tắc cứng nhắc. Cổng có thể được gán và dùng cho những mục đích khác với mục đích ban đầu. Chẳng hạn, lọc HTTP sẽ tìm những dấu hiệu đặc trưng mà giao thức sử dụng, như yêu cầu GET/POST, rồi hiển thị kết quả dựa trên chúng. Lọc theo cổng `80` hiển thị mọi thứ được gửi hoặc nhận qua cổng đó, bất kể giao thức truyền tải.
 
 Trong section tiếp theo, chúng ta sẽ làm việc với một số tính năng nâng cao hơn của Wireshark.
+
+<a id="section-11"></a>
+
+## Section 11/15 — Làm quen với Wireshark
+
+Bài lab này giúp chúng ta làm quen với Wireshark ở mức cơ bản và sử dụng giao diện đồ họa để thu thập lưu lượng. Chúng ta sẽ dành thời gian dùng bộ lọc thu thập và hiển thị, đồng thời làm quen với những dạng đầu ra khác nhau của công cụ.
+
+Một người dùng mang laptop đến helpdesk, phàn nàn rằng thời gian tải trang dài bất thường khi duyệt web. Họ nói cảm giác như mạng bị quá tải và máy tính đang tạo nhiều kết nối khác nhau. Chúng ta được giao xác minh máy tính hoạt động bình thường. Để làm điều đó, chúng ta kết nối máy vào mạng và bắt đầu thu thập gói tin trong khi duyệt web. Hãy phân tích những gì xuất hiện trong đầu ra để xác định có điều gì bất thường không. Hiện tại, chúng ta chỉ quan tâm đến laptop này, vì vậy hãy lọc bỏ mọi lưu lượng không xuất phát từ hoặc gửi đến nó.
+
+> Nếu bạn muốn tiếp cận bài lab theo hướng tự khám phá hơn, tôi đã liệt kê những nhiệm vụ tổng quát cần hoàn thành. Để xem hướng dẫn chi tiết hơn về cách hoàn thành từng bước, hãy xem ô lời giải bên dưới mỗi nhiệm vụ.
+
+### Các nhiệm vụ
+
+#### Nhiệm vụ #1
+
+Xác minh Wireshark đã được cài đặt, mở Wireshark và làm quen với các cửa sổ, thanh công cụ trong GUI.
+
+Hãy dành một chút thời gian khám phá GUI của Wireshark. Bảo đảm biết những tùy chọn nào nằm trong từng tab của các menu lệnh. Đặc biệt chú ý tab **Capture** và các tùy chọn bên trong.
+
+#### Nhiệm vụ #2
+
+Chọn giao diện để thu thập và tạo capture filter chỉ hiển thị lưu lượng đến, đi từ IP máy của bạn.
+
+Chọn giao diện đang hoạt động, chẳng hạn `eth0` hoặc card WiFi, để thu thập lưu lượng.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Từ màn hình chính, chọn giao diện muốn thu thập trong menu thả xuống. Bạn cũng có thể nhấp **Capture → Options → Interface**, rồi chọn giao diện phù hợp.
+
+</details>
+
+#### Nhiệm vụ #3
+
+Tạo capture filter.
+
+Tiếp theo, chúng ta muốn tạo và áp dụng capture filter để chỉ hiển thị lưu lượng xuất phát từ hoặc gửi đến địa chỉ IP của mình.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Để làm điều đó, từ màn hình chính, chọn các tùy chọn thu thập và nhập bộ lọc `host X.X.X.X`, thay bằng IP trên giao diện của bạn.
+
+Khi capture filter đã đúng, chọn **Start**.
+
+</details>
+
+#### Nhiệm vụ #4
+
+Truy cập một trang web để tạo lưu lượng.
+
+Mở trình duyệt web và truy cập `pepsi.com`. Lặp lại bước này với `http://apache.org`. Trong khi trang đang tải, chuyển về cửa sổ Wireshark. Chúng ta sẽ thấy lưu lượng chạy qua cửa sổ capture. Khi trang đã tải xong, dừng thu thập bằng cách nhấp ô vuông màu đỏ có nhãn **Stop** trên thanh thao tác.
+
+#### Nhiệm vụ #5
+
+Dùng kết quả capture để trả lời các câu hỏi sau.
+
+- Có nhiều phiên được thiết lập giữa máy và web server không? Làm sao bạn biết?
+- Những giao thức tầng ứng dụng nào xuất hiện trong kết quả?
+- Có thể đọc được nội dung nào ở dạng văn bản rõ không? Đó là gì?
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Khi truy cập `pepsi.com` và `http://apache.org`, bạn sẽ nhận được một số luồng khác nhau và nhiều giao thức: DNS để yêu cầu bản ghi cho các trang, HTTP cho trang `apache.org`, HTTPS cho `Pepsi.com`, cùng mọi lưu lượng khác đang diễn ra trong phân đoạn mạng lúc đó.
+
+Nếu nhận thấy sự khác biệt giữa các lưu lượng, bạn đang đi đúng hướng. Đầu ra từ `apache.org` sẽ ở dạng văn bản rõ. Điều này xảy ra vì HTTP không được mã hóa. Tuy nhiên, lưu lượng HTTPS sẽ rất khác.
+
+</details>
+
+Đừng dừng ở đây. Hãy dành thời gian làm quen với đầu ra Wireshark cung cấp và cách biến đổi cách hiển thị. Chúng ta cũng có thể dùng các tệp PCAP mẫu tại [SampleCaptures của Wireshark](https://wiki.wireshark.org/SampleCaptures) để phân tích những giao thức khác nhau, thậm chí lưu lượng ICS SCADA và virus. Nếu đang kết nối mạng Academy để làm bài lab này, hãy dành thời gian thu thập lưu lượng trên giao diện được cung cấp. Bạn có thể tìm thấy những lưu lượng mạng thú vị nếu quan sát đủ kỹ.
+
+### Tổng kết
+
+Đến cuối bài lab, chúng ta sẽ quen với Wireshark, hình thức và cách hoạt động của GUI. Chúng ta đã làm quen với thanh lệnh, thanh thao tác và nội dung trong từng tab tương ứng. Chúng ta cần hiểu cách chọn giao diện thu thập và bắt đầu thu thập thành công khi đã áp dụng bộ lọc. Hãy thử một vài bộ lọc tự thiết kế để xem có thể kết hợp như thế nào và chúng thay đổi kết quả ra sao.
 
 <a id="section-12"></a>
 
@@ -1513,7 +1922,7 @@ Trong section này, chúng ta sẽ tìm hiểu một số cách sử dụng Wire
 
 ### Plugin
 
-Các menu **Analyze** và **Statistics** cung cấp rất nhiều plugin để chạy trên capture. Trong section này, chúng ta sẽ tìm hiểu một vài plugin. Tác giả muốn trình bày toàn bộ những gì Wireshark cung cấp, nhưng tiếc là điều đó không khả thi trong một module nhập môn. Tác giả khuyến khích mọi người thử nghiệm và khám phá trong suốt quá trình học.
+Các menu **Analyze** và **Statistics** cung cấp rất nhiều plugin để chạy trên capture. Trong section này, chúng ta sẽ tìm hiểu một vài plugin. Chúng tôi muốn trình bày toàn bộ những gì Wireshark cung cấp, nhưng tiếc là điều đó không khả thi trong một module nhập môn. Tôi khuyến khích mọi người thử nghiệm và khám phá trong suốt hành trình này.
 
 ### Các tab Statistics và Analyze
 
@@ -1521,13 +1930,17 @@ Các tab **Statistics** và **Analyze** có thể giúp chúng ta hiểu sâu v�
 
 Những plugin ở đây có thể cung cấp báo cáo chi tiết về lưu lượng mạng đang được sử dụng. Chúng có thể cho thấy mọi thứ, từ những máy giao tiếp nhiều nhất trong môi trường đến từng cuộc hội thoại cụ thể, thậm chí phân tách theo IP và giao thức.
 
-*Tab Statistics.*
+#### Tab Statistics
+
+![](images/wireshark-statistics.png)
 
 #### Analyze
 
 Từ tab **Analyze**, chúng ta có thể dùng các plugin để thực hiện những việc như theo dõi luồng TCP, lọc theo loại cuộc hội thoại, chuẩn bị bộ lọc gói tin mới và kiểm tra thông tin chuyên gia do Wireshark tạo ra về lưu lượng. Dưới đây là một vài ví dụ về cách sử dụng những plugin này.
 
-*Tab Analyze.*
+#### Tab Analyze
+
+![](images/analyze.png)
 
 ### Theo dõi luồng TCP
 
@@ -1539,11 +1952,15 @@ Wireshark có thể ghép các gói tin TCP lại với nhau để tái tạo to
 2. Chọn **Follow → TCP**.
 3. Một cửa sổ mới mở ra với luồng đã được ghép lại. Từ đây, chúng ta có thể xem toàn bộ cuộc hội thoại.
 
-*Theo dõi một luồng qua GUI.*
+#### Theo dõi một luồng qua GUI
+
+![](images/follow-tcp.gif)
 
 Ngoài ra, chúng ta có thể dùng bộ lọc `tcp.stream eq #` để tìm và theo dõi những cuộc hội thoại được thu thập trong tệp pcap.
 
-*Lọc một luồng TCP cụ thể.*
+#### Lọc một luồng TCP cụ thể
+
+![](images/tcp-stream.png)
 
 Hãy chú ý ba gói tin đầu tiên trong hình phía trên tạo thành một quá trình bắt tay TCP đầy đủ. Sau những gói tin đó, chúng ta có thể thấy luồng đang truyền dữ liệu. Bằng cách dùng bộ lọc, chúng ta đã loại khỏi phần hiển thị mọi thứ không liên quan và giờ có thể xem cuộc hội thoại theo đúng thứ tự.
 
@@ -1556,27 +1973,35 @@ Wireshark có thể khôi phục nhiều loại dữ liệu khác nhau từ các
 1. Dừng quá trình thu thập.
 2. Chọn **File → Export**, sau đó chọn định dạng giao thức cần trích xuất, chẳng hạn DICOM, HTTP, SMB, v.v.
 
-*Trích xuất tệp từ GUI.*
+#### Trích xuất tệp từ GUI
 
-Một cách thú vị khác để lấy dữ liệu từ tệp pcap liên quan đến FTP. File Transfer Protocol truyền dữ liệu giữa server và máy, cho phép chúng ta lấy dữ liệu từ các byte thô và tái tạo tệp, chẳng hạn hình ảnh hoặc tài liệu văn bản. FTP sử dụng TCP làm giao thức truyền tải và dùng các cổng `20` và `21` để hoạt động. Cổng TCP `20` dùng để truyền dữ liệu giữa server và máy, còn cổng `21` là cổng điều khiển FTP. Những lệnh như đăng nhập, liệt kê tệp, yêu cầu tải xuống hoặc tải lên đều đi qua cổng này. Để thực hiện việc trích xuất, chúng ta cần xem những display filter FTP khác nhau trong Wireshark. Nguồn có nhắc đến một liên kết chứa danh sách đầy đủ các bộ lọc này. Hiện tại, chúng ta sẽ xem ba bộ lọc:
+![](images/extract-http.gif)
+
+Một cách thú vị khác để lấy dữ liệu từ tệp pcap liên quan đến FTP. File Transfer Protocol truyền dữ liệu giữa server và máy, cho phép chúng ta lấy dữ liệu từ các byte thô và tái tạo tệp, chẳng hạn hình ảnh hoặc tài liệu văn bản. FTP sử dụng TCP làm giao thức truyền tải và dùng các cổng `20` và `21` để hoạt động. Cổng TCP `20` dùng để truyền dữ liệu giữa server và máy, còn cổng `21` là cổng điều khiển FTP. Những lệnh như đăng nhập, liệt kê tệp, yêu cầu tải xuống hoặc tải lên đều đi qua cổng này. Để thực hiện việc trích xuất, chúng ta cần xem những display filter FTP khác nhau trong Wireshark. Có thể tìm thấy danh sách đầy đủ các bộ lọc này tại đây. Hiện tại, chúng ta sẽ xem ba bộ lọc:
 
 - `ftp`: Hiển thị mọi thông tin về giao thức FTP.
 
 Chúng ta có thể sử dụng bộ lọc này để hình dung những máy/server nào đang truyền dữ liệu qua FTP.
 
-*Dissector FTP.*
+#### Dissector FTP
+
+![](images/ftp-disector.png)
 
 - `ftp.request.command`: Hiển thị những lệnh được gửi qua kênh điều khiển FTP (`port 21`).
 
 Với bộ lọc này, chúng ta có thể tìm thông tin như tên người dùng và mật khẩu. Nó cũng có thể cho thấy tên tệp của những nội dung được yêu cầu.
 
-*Bộ lọc FTP-Request-Command.*
+#### Bộ lọc FTP-Request-Command
+
+![](images/ftp-request-command.png)
 
 - `ftp-data`: Hiển thị dữ liệu được truyền qua kênh dữ liệu (`port 20`).
 
 Nếu lọc theo một cuộc hội thoại và dùng `ftp-data`, chúng ta có thể lấy mọi thứ được gửi trong cuộc hội thoại đó. Có thể tái tạo mọi nội dung đã truyền bằng cách đưa dữ liệu thô vào một tệp mới và đặt tên thích hợp.
 
-*Bộ lọc FTP-Data.*
+#### Bộ lọc FTP-Data
+
+![](images/ftp-data.png)
 
 Vì FTP sử dụng TCP làm cơ chế truyền tải, chúng ta có thể dùng chức năng **Follow TCP Stream** đã sử dụng ở phần trước của section để nhóm bất kỳ cuộc hội thoại nào muốn khám phá. Các bước cơ bản để phân tích dữ liệu FTP từ một tệp pcap như sau:
 
@@ -1585,3 +2010,462 @@ Vì FTP sử dụng TCP làm cơ chế truyền tải, chúng ta có thể dùng
 3. Chọn một tệp, sau đó lọc theo `ftp-data`. Chọn gói tin tương ứng với tệp quan tâm và theo dõi luồng TCP liên quan.
 4. Sau đó, đổi **Show and save data as** thành **Raw**, rồi lưu nội dung với tên tệp gốc.
 5. Xác minh việc trích xuất bằng cách kiểm tra loại tệp.
+
+<a id="section-13"></a>
+
+## Section 13/15 — Packet Inception: Phân tích lưu lượng mạng bằng Wireshark
+
+Mục đích của bài lab này là giúp chúng ta có kinh nghiệm phân tích lưu lượng trong Wireshark. Chúng ta sẽ có cơ hội trích xuất các đối tượng từ lưu lượng mạng đã thu thập trước đó, đồng thời lấy dữ liệu từ lưu lượng trực tiếp.
+
+Chúng ta được cung cấp một tệp capture chứa dữ liệu từ một phiên web không mã hóa. Có một hình ảnh được nhúng bên trong cần được dùng làm bằng chứng về việc sử dụng mạng không đúng quy định. Quản lý bảo mật cho rằng người dùng đang gửi những thông điệp ẩn trong hình ảnh. Hãy dùng Wireshark và áp dụng bộ lọc để xác định vị trí, trích xuất bằng chứng.
+
+> Nếu bạn muốn tiếp cận bài lab theo hướng tự khám phá hơn, tôi đã liệt kê những nhiệm vụ tổng quát cần hoàn thành. Để xem hướng dẫn chi tiết hơn về cách hoàn thành từng bước, hãy xem ô lời giải bên dưới mỗi nhiệm vụ.
+
+### Các nhiệm vụ
+
+Sử dụng `Wireshark-lab-2.zip` trong phần tài nguyên tùy chọn và thực hiện bài lab tốt nhất có thể.
+
+#### Nhiệm vụ #1
+
+Mở tệp đã thu thập trước đó để trích xuất HTTP.
+
+Trong Wireshark, chọn **File → Open**, rồi duyệt đến `Wireshark-lab-2.pcap`. Mở tệp.
+
+#### Nhiệm vụ #2
+
+Lọc kết quả.
+
+Khi đã mở tệp pcap trong Wireshark, chúng ta thấy khá nhiều lưu lượng bên trong. Tệp có tổng cộng khoảng `1171` gói tin, nhưng chưa đến `20` gói là HTTP. Hãy dành một chút thời gian kiểm tra tệp pcap, làm quen với những cuộc hội thoại đang diễn ra và suy nghĩ về nhiệm vụ cần hoàn thành. Mục tiêu là trích xuất những hình ảnh có thể được nhúng bên trong để làm bằng chứng. Dựa trên yêu cầu đã nhận, hãy làm gọn phần hiển thị bằng cách chỉ lọc lưu lượng HTTP.
+
+Áp dụng bộ lọc chỉ bao gồm các yêu cầu HTTP (`80/TCP`).
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Bước một: Nhấp vào thanh **Display Filter** ở đầu màn hình và nhập `HTTP`. Nếu đúng, thanh sẽ chuyển sang màu xanh lá.
+
+</details>
+
+Hãy chú ý cách thao tác này loại những datagram TCP hoặc IP khác khỏi cửa sổ, cho phép tập trung riêng vào giao tiếp HTTP. Từ đây, chúng ta thấy một số datagram HTTP cơ bản có phương thức GET và phản hồi `200 OK`. Chúng đáng chú ý vì giờ đây có thể thấy client đã yêu cầu một số tệp và server trả lời OK. Nếu chọn một phản hồi OK, chúng ta có thể theo dõi luồng và xem việc truyền dữ liệu qua TCP. Hãy thử làm điều đó.
+
+#### Nhiệm vụ #3
+
+Theo dõi luồng và trích xuất những đối tượng tìm thấy.
+
+Sau khi xác định có lưu lượng HTTP trong tệp capture này, hãy thử lấy một số đối tượng bên trong theo yêu cầu. Điều đầu tiên cần làm là theo dõi luồng của một lần truyền tệp. Giữ bộ lọc `http` đang áp dụng, tìm một dòng mà web server trả lời bằng thông điệp `200 OK`, đóng vai trò xác nhận/biên nhận cho yêu cầu GET của người dùng. Sau đó chọn gói tin và theo dõi luồng TCP.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Bước một: Chọn gói tin có `200 OK` trong trường **Info**. Nhấp chuột phải vào gói tin.
+
+Bước hai: Trong menu xuất hiện, chọn **Follow → TCP Stream**. Một cửa sổ mới sẽ mở ra, chứa toàn bộ luồng TCP. Thao tác này cũng áp dụng display filter `tcp.stream eq #`.
+
+Bước ba: Dành một chút thời gian xem dữ liệu để xác nhận rằng tệp có vẻ đã được truyền.
+
+</details>
+
+Khi đã xác minh việc truyền dữ liệu xảy ra, Wireshark giúp trích xuất tệp từ lưu lượng HTTP rất dễ dàng. Chúng ta có thể kiểm tra xem một tệp ảnh đã được tải xuống hay chưa bằng cách tìm định dạng JFIF trong các gói tin. JPEG File Interchange Format, hay JFIF, cho biết sự hiện diện của các tệp ảnh JPEG. Chúng ta tìm định dạng này vì đây là một trong những loại tệp ảnh phổ biến nhất, bên cạnh png. Do đó, trong cuộc điều tra, khả năng cao chúng ta sẽ thấy hình ảnh ở định dạng này.
+
+Kiểm tra sự hiện diện của tệp JFIF trong lưu lượng HTTP.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Xóa display filter trước đó và áp dụng `http && image-jfif` làm display filter.
+
+Áp dụng bộ lọc `http && image-jfif` để chỉ bao gồm các gói tin HTTP (`80/TCP`), kết hợp điều kiện chỉ bao gồm tệp JPEG, sẽ thu hẹp kết quả xuống còn vài gói tin, khoảng `3` gói.
+
+</details>
+
+Giờ đây, khi đã chắc chắn các tệp ảnh được truyền giữa máy đáng ngờ và server, hãy lấy chúng từ capture. Để làm điều này, chúng ta cần xuất các đối tượng từ lưu lượng HTTP.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Để xuất hình ảnh:
+
+Chọn **File → Export Objects → HTTP → file.JPG**.
+
+Thao tác này yêu cầu Wireshark lấy các đối tượng được chỉ định từ lưu lượng HTTP. Chúng ta có thể lưu một bản sao của tệp trên máy cục bộ.
+
+</details>
+
+Đến đây, chúng ta đã có những tệp ảnh mà quản lý bảo mật yêu cầu thu thập, nếu chúng tồn tại. Giờ họ có thể kiểm tra tệp để xác định liệu có dữ liệu nào được giấu bên trong hay không.
+
+### Thu thập và phân tích trực tiếp
+
+Trong tình huống trên, chúng ta thực hành lọc trên tệp đã được thu thập trước đó. Giờ đã đến lúc thu thập gói tin trực tiếp. Chúng ta sẽ kết nối với lab Academy và bắt lưu lượng trực tiếp từ một máy trong mạng để hoàn thành phần này.
+
+Sau khi chúng ta phân tích lưu lượng pcap, quản lý bảo mật quay lại xác nhận người dùng đã lén đưa dữ liệu ra khỏi mạng thông qua hình ảnh. Ông ấy yêu cầu chúng ta thu thập lưu lượng để xác định còn điều gì khác đang diễn ra từ máy `172.16.10.2` của người dùng. Chúng ta cần bắt đầu thu thập, phân loại, lọc dữ liệu và trích xuất mọi thứ có ý nghĩa với cuộc điều tra.
+
+### Kết nối với lab
+
+Cách truy cập môi trường để hoàn thành phần này của bài lab hơi khác. Chúng ta dùng XfreeRDP để truy cập desktop của máy ảo lab, từ đó sử dụng Wireshark ngay trong môi trường.
+
+Chúng ta sẽ kết nối với lab Academy như thông thường, dùng máy ảo riêng với khóa HTB Academy VPN hoặc Pwnbox tích hợp trong section của module. Sau khi target được khởi tạo, bạn có thể khởi chạy client FreeRDP trên Pwnbox bằng cách nhập lệnh sau trong shell:
+
+```bash
+xfreerdp /v:<target IP> /u:htb-student /p:HTB_@cademy_stdnt!
+```
+
+Bạn có thể tìm IP target, tên người dùng và mật khẩu cần thiết bên dưới:
+
+Nhấp bên dưới, trong phần Questions, để khởi tạo máy target và nhận địa chỉ IP.
+
+IP ==
+
+Username == `htb-student`
+
+Password == `HTB_@cademy_stdnt!`
+
+### Bắt đầu thu thập bằng Wireshark
+
+Chúng ta sẽ bắt lưu lượng từ máy đã đăng nhập qua máy ảo riêng hoặc Pwnbox. Dùng giao diện `ENS224` trong Wireshark, để quá trình thu thập chạy vài phút rồi dừng lại. Mục tiêu là xác định có hoạt động nào giữa máy người dùng và một máy khác trong mạng công ty hoặc mạng bên ngoài hay không.
+
+### Tự phân tích
+
+Trước khi làm theo những nhiệm vụ bên dưới, hãy dành thời gian tự kiểm tra lưu lượng pcap mà không xem hướng dẫn. Sử dụng các kỹ năng đã thực hành, chẳng hạn theo dõi luồng, phân tích cuộc hội thoại và những kỹ năng khác để xác định điều gì đang diễn ra. Ghi nhớ những câu hỏi sau trong lúc phân tích:
+
+- Có thể thấy bao nhiêu cuộc hội thoại?
+- Chúng ta có xác định được client và server không?
+- Những giao thức nào đang được sử dụng?
+- Có điều gì đáng chú ý đang xảy ra không, chẳng hạn sử dụng sai mục đích cổng, lưu lượng hoặc thông tin xác thực dạng văn bản rõ, v.v.?
+
+Trong bài lab này, chúng ta quan tâm đến các máy `172.16.10.2` và `172.16.10.20` khi thực hiện các bước sau. Trong quá trình phân tích, chúng ta sẽ nhận thấy một ít lưu lượng web giữa những máy này và một ít lưu lượng FTP. Hãy tìm hiểu sâu hơn.
+
+### Phân tích FTP
+
+Khi kiểm tra lưu lượng đã thu thập, bạn có nhận thấy lưu lượng nào liên quan đến FTP không?
+
+- Máy nào đóng vai trò server cho lưu lượng đó?
+- Có xác định được những thao tác này do người dùng đã xác thực thực hiện hay là truy cập ẩn danh không?
+
+#### Lọc kết quả
+
+Sau khi thấy một số lưu lượng đáng chú ý, hãy thử lấy tệp trực tiếp từ dữ liệu trên đường truyền.
+
+Kiểm tra các lệnh FTP để xác định nội dung cần xem, sau đó trích xuất tệp từ `ftp-data` và ghép lại.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+1. Xác định lưu lượng FTP bằng display filter `ftp`.
+2. Xem các lệnh điều khiển được gửi giữa server và các máy bằng bộ lọc `ftp.request.command` để xác định có nội dung nào được truyền hay không và ai đã truyền.
+3. Chọn một tệp, rồi lọc theo `ftp-data`. Chọn gói tin tương ứng với tệp quan tâm và theo dõi luồng TCP liên quan.
+4. Sau đó, đổi **Show and save data as** thành **Raw** và lưu nội dung với tên tệp gốc.
+5. Xác minh việc trích xuất bằng cách kiểm tra loại tệp.
+
+</details>
+
+### Phân tích HTTP
+
+Chúng ta cũng sẽ thấy một ít lưu lượng HTTP. Bạn có thấy như vậy không?
+
+- Nếu có, chúng ta có xác định được web server là máy nào không?
+- Ứng dụng nào đang vận hành web server?
+- Những phương thức yêu cầu phổ biến nhất bạn thấy là gì?
+
+#### Theo dõi luồng và trích xuất những đối tượng tìm thấy
+
+Giờ hãy thử theo dõi luồng HTTP và xác định có nội dung nào có thể trích xuất hay không.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+1. Áp dụng bộ lọc `http && image-jfif` để chỉ bao gồm các gói tin HTTP (`80/TCP`), kết hợp điều kiện chỉ bao gồm JPEG File Interchange Format, tức các tệp JPEG.
+2. Tìm dòng mà web server trả lời bằng thông điệp `200 OK`, đóng vai trò xác nhận/biên nhận cho yêu cầu GET của người dùng.
+3. Chọn **File > Export Objects > HTTP > file.JPG**.
+
+</details>
+
+### Tổng kết
+
+Đến cuối bài lab, chúng ta sẽ có thể mở các tệp `.pcap` đã thu thập trước đó, áp dụng display filter, theo dõi luồng và trích xuất đối tượng từ tệp capture. Hãy thử các cách thu thập lưu lượng mới và áp dụng bộ lọc để tìm lưu lượng cụ thể. Để kiểm tra mức độ hiểu bài, trả lời những câu hỏi bên dưới dựa trên lưu lượng bạn tự thu thập.
+
+#### Kiểm tra mức độ hiểu bài
+
+- Bạn đã dùng những bộ lọc hoặc biểu thức nào? Chúng có hiệu quả không?
+- Những bộ lọc đó ảnh hưởng thế nào đến lưu lượng bạn có thể thấy trong capture?
+- Việc sử dụng các tính năng này có thể giúp ích thế nào cho bạn và nhiệm vụ của bạn?
+- Bạn sẽ dùng bộ lọc nào nếu chỉ muốn thấy lưu lượng TCP từ client?
+
+<a id="section-14"></a>
+
+## Section 14/15 — Lab có hướng dẫn: Quy trình phân tích lưu lượng
+
+Một quản trị viên đồng nghiệp nhận thấy kết nối lạ từ máy của Bob, có IP `172.16.10.90`, khi phân tích những bản capture baseline mà chúng ta đã thu thập. Anh ấy nhờ chúng ta kiểm tra và đưa ra nhận định về điều đang diễn ra.
+
+Hãy thử vận dụng các khái niệm trong những section về quy trình phân tích để hoàn thành việc phân tích `guided-analysis.zip` trong phần tài nguyên tùy chọn và lưu lượng trực tiếp từ mạng Academy. Khi hoàn thành, bạn có thể kiểm tra bài làm bằng đáp án có hướng dẫn được đính kèm cùng PCAP trong tệp zip.
+
+### Các nhiệm vụ
+
+#### Nhiệm vụ #1
+
+Kết nối với máy đang hoạt động để thu thập lưu lượng.
+
+**Hướng dẫn kết nối**
+
+Để truy cập môi trường lab và hoàn thành những nhiệm vụ sau, chúng ta cần dùng XfreeRDP nhằm truy cập GUI của máy ảo, từ đó sử dụng Wireshark trong môi trường.
+
+Chúng ta sẽ kết nối với lab Academy như thông thường, dùng máy ảo riêng với khóa HTB Academy VPN hoặc Pwnbox tích hợp trong section của module. Sau khi target được khởi tạo, bạn có thể khởi chạy client FreeRDP trên Pwnbox bằng cách nhập lệnh sau trong shell:
+
+```bash
+xfreerdp /v:<target IP> /u:htb-student /p:HTB_@cademy_stdnt!
+```
+
+Bạn có thể tìm IP target, tên người dùng và mật khẩu cần thiết bên dưới:
+
+Nhấp bên dưới, trong phần Questions, để khởi tạo máy target và nhận địa chỉ IP.
+
+IP ==
+
+Username == `htb-student`
+
+Password == `HTB_@cademy_stdnt!`
+
+Sau khi kết nối, mở Wireshark và bắt đầu thu thập trên giao diện `ENS224`.
+
+### Phân tích
+
+Làm theo mẫu quy trình này và kiểm tra lưu lượng đáng ngờ. Mục tiêu là xác định điều gì đang xảy ra với máy đang được xem xét.
+
+#### Vấn đề là gì?
+
+Tóm tắt ngắn gọn vấn đề.
+
+#### Xác định phạm vi và mục tiêu — Chúng ta tìm gì, trong khoảng thời gian nào?
+
+- **Phạm vi:** Chúng ta tìm gì, ở đâu?
+- **Thời điểm vấn đề bắt đầu:**
+- **Thông tin hỗ trợ:** Tệp, nguồn dữ liệu và mọi thứ hữu ích.
+
+#### Xác định đối tượng cần phân tích — Mạng, máy, giao thức
+
+**Các máy cần phân tích:** Mạng hoặc địa chỉ của các máy.
+
+#### Thu thập lưu lượng mạng hoặc đọc PCAP đã thu thập trước đó
+
+Thực hiện những thao tác cần thiết để phân tích lưu lượng và tìm dấu hiệu xâm nhập.
+
+#### Xác định những thành phần lưu lượng mạng cần thiết — Lọc
+
+Sau khi có lưu lượng, lọc bỏ mọi phần không cần thiết cho cuộc điều tra, bao gồm lưu lượng khớp với baseline thông thường; giữ lại mọi thứ liên quan đến phạm vi điều tra.
+
+#### Hiểu lưu lượng mạng đã thu thập
+
+Khi đã lọc bỏ nhiễu, đến lúc tìm những đối tượng cần phân tích. Bắt đầu từ phạm vi rộng và dần thu hẹp quanh phạm vi đã xác định.
+
+#### Ghi chú hoặc lập sơ đồ tư duy về kết quả tìm được
+
+Ghi lại mọi việc chúng ta làm, thấy hoặc tìm được trong suốt cuộc điều tra là rất quan trọng. Bảo đảm ghi chú đầy đủ, bao gồm:
+
+- Các khoảng thời gian chúng ta thu thập lưu lượng.
+- Những máy/cổng đáng ngờ trong mạng.
+- Các cuộc hội thoại chứa bất kỳ điều gì đáng ngờ, bao gồm timestamp, số gói tin, tệp, v.v.
+
+#### Tổng kết phân tích — Chúng ta đã tìm được gì?
+
+Cuối cùng, tổng kết những gì đã tìm được và giải thích các chi tiết liên quan để cấp trên quyết định cách ly những máy bị ảnh hưởng hoặc tiến hành một hoạt động ứng phó sự cố ở mức cao hơn.
+
+Phân tích của chúng ta sẽ ảnh hưởng đến những quyết định được đưa ra, vì vậy cần trình bày rõ ràng và ngắn gọn nhất có thể.
+
+Trước tiên, hãy tự thực hiện một lượt để kiểm tra và làm theo quy trình, sau đó xem walkthrough (hướng dẫn từng bước) của bài lab bên dưới.
+
+<details>
+<summary>Nhấp để xem hướng dẫn từng bước</summary>
+
+Nhiệm vụ này phù hợp nhất khi thực hiện bằng tệp PCAP được cung cấp cho bài học.
+
+Theo các bước trong quy trình, chúng ta điền thông tin và tiến hành phân tích.
+
+#### Vấn đề là gì?
+
+Lưu lượng đáng ngờ xuất phát từ bên trong mạng.
+
+#### Xác định phạm vi và mục tiêu — Chúng ta tìm gì, trong khoảng thời gian nào?
+
+- **Đối tượng:** Lưu lượng xuất phát từ `10.129.43.4`.
+- **Thời gian:** Trong `48` giờ gần nhất. Thu thập lưu lượng để xác định hoạt động có còn tiếp diễn không.
+- **Thông tin hỗ trợ:** Tệp `NTA-guided.pcap`.
+
+#### Xác định đối tượng cần phân tích — Mạng, máy, giao thức
+
+**Phạm vi:** `10.129.43.4` và mọi máy có kết nối với nó. Giao thức chưa xác định trên cổng `4444`.
+
+#### Thu thập lưu lượng mạng
+
+Kết nối vào một đường truyền có quyền truy cập mạng `10.129.43.0/24` để thu thập lưu lượng trực tiếp, thử xem có hoạt động nào đang diễn ra không.
+
+Chúng ta được cung cấp một PCAP chứa dữ liệu lịch sử, trong đó có một phần lưu lượng bị nghi ngờ. Chúng ta sẽ kiểm tra tệp này để phân tích vấn đề.
+
+#### Xác định những thành phần lưu lượng mạng cần thiết — Lọc
+
+Trước hết, chúng ta lọc bỏ mọi thứ không có kết nối với `10.129.43.4`, vì hiện tại đây là máy đáng ngờ chính.
+
+#### Các cuộc hội thoại
+
+![](images/guided-conversations.png)
+
+Sau khi kiểm tra plugin Conversations trong hình phía trên, có thể thấy tệp pcap này chỉ ghi lại `3` cuộc hội thoại và tất cả đều liên quan đến máy đáng ngờ. Tiếp theo, chúng ta xem plugin Protocol Hierarchy để xác định lưu lượng thuộc những loại nào.
+
+#### Thống kê giao thức
+
+![](images/guided-proto.png)
+
+Ở đây có thể thấy PCAP chủ yếu chứa lưu lượng TCP, cùng một ít UDP. Vì lưu lượng UDP ít hơn TCP, hãy xem UDP trước.
+
+Sau khi lọc bỏ nhiễu, đến lúc tìm những điều bất thường. Trước tiên, chúng ta sẽ lọc bỏ mọi thứ ngoại trừ lưu lượng UDP.
+
+#### UDP
+
+![](images/guided-udp.png)
+
+Khi chỉ lọc lưu lượng UDP, chúng ta thấy `9` gói tin: `4` gói ARP, `4` gói Network Address Translation (NAT) và `1` gói Simple Service Discovery Protocol (SSDP). Dựa vào loại gói tin và thông tin bên trong, chúng ta xác định đây là lưu lượng mạng thông thường, không có gì đáng lo ngại.
+
+Giờ chuyển sang xem lưu lượng TCP. Ở đây sẽ có nhiều dữ liệu hơn để sàng lọc. Chúng ta dùng display filter `!udp && !arp`. Bộ lọc này loại bỏ những gì đã phân tích.
+
+#### TCP
+
+![](images/guided-tcp.png)
+
+Sau khi làm gọn phần hiển thị, có thể thấy những gói còn lại đều là TCP và dường như cùng thuộc một cuộc hội thoại giữa các máy `10.129.43.4` và `10.129.43.29`. Chúng ta xác định điều này nhờ thấy phiên được thiết lập qua lần bắt tay ba bước ở gói số `3`, và những gói còn lại trong đầu ra bên dưới đều dùng cùng các cổng.
+
+#### Thiết lập phiên TCP
+
+![](images/guided-handshake.png)
+
+Điểm đáng chú ý là chúng ta không thấy quá trình kết thúc phiên TCP trong tệp PCAP. Điều này có thể có nghĩa phiên vẫn đang hoạt động và chưa kết thúc. Chúng ta cho rằng như vậy vì cũng không thấy gói Reset nào.
+
+Chúng ta cũng có thể kiểm tra cuộc hội thoại bằng cách theo dõi luồng TCP từ gói số `3` để xác định nội dung bên trong.
+
+#### Theo dõi luồng TCP
+
+![](images/guided-stream.png)
+
+Sau khi theo dõi luồng TCP, chúng ta cần đặc biệt cảnh giác. Toàn bộ cuộc hội thoại giữa hai máy có thể đọc được ở dạng văn bản rõ, và dường như có người đang thực hiện nhiều thao tác khác nhau trên máy.
+
+Nhìn hình phía trên, có vẻ người nào đó đang thực hiện reconnaissance (trinh sát/thu thập thông tin) cơ bản trên máy. Họ chạy các lệnh như `whoami`, `ipconfig`, `dir`. Có vẻ họ đang cố tìm hiểu môi trường và xác định mình có quyền của người dùng nào trên máy. Phần này được tô màu cam trong hình phía trên.
+
+Điều thực sự đáng báo động là giờ đây chúng ta thấy có người đã tạo tài khoản `hacker` và thêm tài khoản đó vào nhóm `administrators` trên máy. Hoặc đây là một trò đùa của một quản trị viên kém năng lực, hoặc có người đã xâm nhập hạ tầng công ty.
+
+#### Ghi chú hoặc lập sơ đồ tư duy về kết quả tìm được
+
+Ghi lại mọi việc chúng ta làm, thấy hoặc tìm được trong suốt cuộc điều tra là rất quan trọng. Nếu cần, hãy vẽ hình mô tả trình tự các hành động.
+
+Với quy trình mẫu này, chúng ta đã ghi lại các thao tác và đính kèm ảnh chụp màn hình của mọi nội dung đưa vào phân tích. Chúng sẽ hỗ trợ việc đưa ra quyết định ứng phó.
+
+#### Tổng kết phân tích — Chúng ta đã tìm được gì?
+
+Dựa trên phân tích, chúng ta xác định một tác nhân độc hại đã xâm nhập ít nhất một máy trong mạng. Máy `10.129.43.29` có dấu hiệu có người thực thi lệnh, bao gồm tạo người dùng và gán quyền quản trị viên cục bộ thông qua các lệnh `net`. Có vẻ tác nhân đã dùng máy Bob để thực hiện những hành động đó. Vì Bob trước đó đã bị điều tra về việc đưa bí mật công ty ra ngoài rồi ngụy trang thành lưu lượng web, chúng ta có cơ sở cho rằng vấn đề đã lan rộng hơn. Những ảnh chụp màn hình đính kèm tài liệu này thể hiện luồng lưu lượng và các lệnh được sử dụng.
+
+Theo nhận định của chúng ta, cần triển khai đầy đủ quy trình Incident Response (IR — ứng phó sự cố) để ngăn mối đe dọa tiếp tục lan rộng. Có thể phân bổ nguồn lực nhằm loại bỏ sự hiện diện độc hại và làm sạch những máy bị ảnh hưởng.
+
+</details>
+
+### Tổng kết
+
+Sau khi phân tích các hành động đã diễn ra, nhóm IR xác định tác nhân đã trở nên lười biếng và quyết định sử dụng một Netcat shell để tương tác trực tiếp với máy Bob trong khi thu thập thêm thông tin. Trong quá trình đó, hắn dùng RDP từ máy Bob đến một desktop Windows khác trong môi trường để cố thiết lập thêm foothold (điểm bám ban đầu). May mắn là nhóm IR đã thu được một số PCAP của lưu lượng RDP. Máy Bob được cách ly và hoạt động ứng phó sự cố được khởi động để xác định những gì đã bị lấy đi cùng các máy khác có khả năng bị xâm phạm. Bạn đã làm tốt khi phát hiện vụ xâm nhập này.
+
+<a id="section-15"></a>
+
+## Section 15/15 — Giải mã các kết nối RDP
+
+Mục đích của bài lab này là cho thấy phần nào sức mạnh của Wireshark. Trong bài lab, chúng ta sẽ làm việc với lưu lượng RDP. Nếu có khóa cần thiết mà hai máy đã dùng để mã hóa lưu lượng, Wireshark có thể giúp làm rõ nội dung lưu lượng đó.
+
+Trong quá trình ứng phó sự cố (IR) và phân tích máy của Bob, nhóm IR đã thu thập một số PCAP của lưu lượng RDP mà họ phát hiện từ máy Bob đến một máy khác trong mạng. Trưởng nhóm yêu cầu chúng ta điều tra sự việc. Khi rà soát máy Bob để tìm thêm bằng chứng, bạn tìm thấy một khóa RDP được giấu trong một cụm thư mục (folder hive) trên máy Bob. Sau khi tìm hiểu, chúng ta nhận ra có thể sử dụng khóa đó để giải mã và kiểm tra lưu lượng RDP.
+
+Hãy thử vận dụng các khái niệm trong những section về quy trình phân tích để hoàn thành việc phân tích `RDP-analysis.zip` được cung cấp.
+
+### Các nhiệm vụ
+
+#### Nhiệm vụ #1
+
+Mở tệp rdp.pcapng trong Wireshark.
+
+Giải nén tệp zip trong phần tài nguyên tùy chọn và mở tệp trong Wireshark.
+
+#### Nhiệm vụ #2
+
+Phân tích lưu lượng bên trong.
+
+Hãy dành một chút thời gian quan sát lưu lượng. Chú ý rằng ở đây có rất nhiều thông tin. Chúng ta biết trọng tâm là RDP, vì vậy hãy lọc theo `rdp` để xem kết quả trả về.
+
+#### Bộ lọc RDP
+
+Ở trạng thái hiện tại, chúng ta không thấy được nhiều, đúng không? Đó là vì mặc định RDP sử dụng TLS để mã hóa dữ liệu, nên chúng ta không thể thấy những gì đã xảy ra trong lưu lượng RDP. Làm sao xác minh nó tồn tại trong tệp này? Một cách là lọc theo cổng thông dụng mà RDP thường sử dụng.
+
+Lọc theo cổng `3389` để xác định có lưu lượng RDP, được mã hóa hoặc không, hay không.
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Sử dụng display filter `tcp.port == 3389`.
+
+#### Lọc cổng TCP 3389
+
+</details>
+
+Ít nhất chúng ta có thể xác minh rằng một phiên đã được thiết lập giữa hai máy qua cổng TCP `3389`.
+
+#### Nhiệm vụ #3
+
+Cung cấp khóa RDP cho Wireshark để giải mã lưu lượng.
+
+Giờ hãy tiến thêm một bước, dùng khóa đã tìm được để thử giải mã lưu lượng.
+
+Để áp dụng khóa trong Wireshark:
+
+1. Vào **Edit → Preferences → Protocols → TLS**.
+2. Trên trang TLS, chọn **Edit** bên cạnh **RSA keys list**; một cửa sổ mới sẽ mở ra.
+
+Làm theo các bước bên dưới để nhập khóa RSA của server.
+
+#### Nhập khóa RDP
+
+#### Các bước
+
+1. Nhấp **+** để thêm khóa mới.
+2. Nhập địa chỉ IP của RDP server: `10.129.43.29`.
+3. Nhập cổng được sử dụng: `3389`.
+4. Đặt trường **Protocol** thành `tpkt` hoặc để trống.
+5. Duyệt đến tệp `server.key` và thêm vào phần tệp khóa.
+6. Lưu và làm mới tệp pcap.
+
+#### Các bước nhập khóa
+
+Khi lọc lại theo RDP, chúng ta sẽ thấy lưu lượng xuất hiện trong phần hiển thị.
+
+#### RDP ở dạng rõ
+
+Từ đây, chúng ta có thể phân tích lưu lượng RDP. Giờ có thể theo dõi luồng TCP, xuất những đối tượng có thể tìm thấy và thực hiện các thao tác khác cần thiết cho cuộc điều tra. Cách này hoạt động vì chúng ta đã lấy được khóa RSA dùng để mã hóa phiên RDP. Các bước lấy khóa khá dài, nhưng nói ngắn gọn, nếu lấy được chứng chỉ RDP từ server, OpenSSL có thể trích xuất khóa riêng từ đó.
+
+### Phân tích lưu lượng đã giải mã
+
+Giờ đây, sau khi đưa RDP ra khỏi đường hầm TLS, chúng ta có thể tìm được gì? Hãy thực hiện các bước phân tích và thử trả lời những câu hỏi bên dưới.
+
+#### Các câu hỏi
+
+**Máy nào đã khởi tạo phiên RDP với server của chúng ta?**
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Nếu chú ý gói tin đầu tiên của lần bắt tay ba bước, tức gói số `8`, chúng ta thấy máy khởi tạo kết nối là `10.129.43.27`.
+
+</details>
+
+**Tài khoản người dùng nào được dùng để khởi tạo kết nối RDP?**
+
+<details>
+<summary>Nhấp để xem đáp án</summary>
+
+Khi lọc theo `tcp.port == 3389`, chúng ta thấy một bản ghi có nhãn **Ignored Unknown Record**. Kiểm tra phần ASCII sẽ cho thấy tên người dùng.
+
+#### Người dùng
+
+</details>
+
+### Tổng kết
+
+Bài lab này minh họa những gì Wireshark có thể làm với dữ liệu đã thu thập và các plugin. Wireshark có khả năng mạnh mẽ trong việc tiếp nhận thông tin và làm rõ những nội dung khó nhìn thấy. Khả năng giải mã dữ liệu sau khi tiếp nhận rất hữu ích. Có thể áp dụng khái niệm này với bất kỳ giao thức nào sử dụng mã hóa, miễn là có khóa được dùng để thiết lập các kết nối.
